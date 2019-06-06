@@ -1,0 +1,3 @@
+# SkyCiv API
+
+This readme is for the SkyCiv API v3. More details will be available soon...
