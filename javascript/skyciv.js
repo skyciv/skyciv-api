@@ -6,6 +6,7 @@
 (function () {
 	var root = this
 	var previous_skyciv = root.skyciv
+	var current_API_version_endpoint = 3
 
 	var has_require = typeof require !== 'undefined'
 
@@ -31,7 +32,8 @@
 
 	// ======== START FUNCTIONS HERE ========
 
-	skyciv.request = function(data, http_or_https) {
+	skyciv.request = function(data, version, http_or_https) {
+		if (!version) version = current_API_version_endpoint;
 		if (!http_or_https) http_or_https = "https";
 
 		if (is_nodejs) {
@@ -40,7 +42,7 @@
 			var options = {
 				hostname: 'api.skyciv.com',
 				port: 80,
-				path: '/v3.php',
+				path: '/v' + version + '.php',
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -62,7 +64,7 @@
 			req.end();
 		} else {
 			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("POST", http_or_https + "://api.skyciv.com/v3", false);
+			xmlHttp.open("POST", http_or_https + "://api.skyciv.com/v" + version, false);
 			xmlHttp.send(JSON.stringify(data));
 		}
 	}
