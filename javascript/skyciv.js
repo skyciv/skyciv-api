@@ -32,26 +32,47 @@
 
 	// ======== START FUNCTIONS HERE ========
 
-	skyciv.request = function(data, version, http_or_https) {
-		if (!version) version = current_API_version_endpoint;
-		if (!http_or_https) http_or_https = "https";
+	skyciv.request = function(data, callback, options) {
+		if (!options) options = {};
+
+		if (!options.version) options.version = current_API_version_endpoint;
+		if (!options.http_or_https) options.http_or_https = "https";
+
+		if (typeof data === "object") {
+			data = JSON.stringify(data);
+		}
 
 		if (is_nodejs) {
-			// TODO https?
-			var http = require("http");
-			var options = {
+			var req_module;
+			var req_port;
+			if (options.http_or_https == "https") {
+				req_module = require('https');
+				req_port = 443;
+			} else {
+				req_module = require('http');
+				req_port = 80;
+			}
+
+			var req_options = {
 				hostname: 'api.skyciv.com',
-				port: 80,
-				path: '/v' + version + '.php',
+				port: req_port,
+				path: '/v' + options.version + '',
 				method: 'POST',
-				headers: {
+				headers: { // these are compulsory for it to work properly
 					'Content-Type': 'application/json',
+					'Content-Length': data.length
 				}
 			};
-			var req = http.request(options, function(res) {
+			var req = req_module.request(req_options, function(res) {
 				res.setEncoding('utf8');
-				res.on('data',function(body) {
-					console.log(body);
+
+				var res_data = "";
+				res.on('data', function(chunk) {
+					res_data += chunk;
+				});
+
+				res.on('end', function () {
+					callback(res_data);
 				});
 			});
 			
@@ -60,12 +81,21 @@
 			});
 
 			// Send the object as a JSON string
-			req.write(JSON.stringify(data));
+			req.write(data);
 			req.end();
 		} else {
-			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open("POST", http_or_https + "://api.skyciv.com/v" + version, false);
-			xmlHttp.send(JSON.stringify(data));
+			var req = new XMLHttpRequest();
+			req.onreadystatechange = function() {
+				try {
+					if (req.readyState == XMLHttpRequest.DONE) {
+						if (callback) callback(JSON.parse(req.responseText));
+					}
+				} catch (e) {
+					throw new Error('There was an issue parsing the response from the API');
+				}
+			}
+			req.open("POST", options.http_or_https + "://api.skyciv.com/v" + options.version, true); // true=async
+			req.send(data);
 		}
 	}
 
