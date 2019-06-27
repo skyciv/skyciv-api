@@ -1,4 +1,4 @@
-# SkyCiv API
+# SkyCiv API v3
 
 This readme is for the SkyCiv Structural Analysis and Design API v3. This API allows structural engineers to develop their own applications and solutions using SkyCiv technology. This includes functionality such as:
 
@@ -8,23 +8,18 @@ This readme is for the SkyCiv Structural Analysis and Design API v3. This API al
 * Running timber members design checks (NDS, AS 1720)
 * Performing structural analysis (static, static-buckling, non-linear (P-delta), frequency analysis (coming soon)
 
+SkyCiv API v3 uses the following endpoint for all methods:\
+```
+https://api.skyciv.com/v3
+```
 
-## Add your credentials
-Your credentials are required if you wish to run the test/example scripts inside the test folders of each language. Add your credentials directly in credentials.json or run in nodeJS or python:\
-```node credentials/credentials.js YOUR_API_USERNAME YOUR_API_KEY```\
-OR\
-```python credentials/credentials.py YOUR_API_USERNAME YOUR_API_KEY```
+You can make a HTTP/HTTPS POST Request to this endpoint manually or you can include/import/require the SkyCiv API file in your project which will do the request for you (typically through the `skyciv.request` method). Currently we have an API module and examples for:
+* JavaScript (browser or node.js compatible)
+* Python
 
-NOTE: We recommend changing your API key frequently.
-
-In all other calls to the SkyCiv API, your credentials are passed in under an auth key:
-```javascript 
-'auth': {
-  "username": "YOUR_USERNAME",
-  "key": "YOUR_API_TOKEN" //get your key from https://platform.skyciv.com/account/settings
-}
-  ```
-
+Eventually we will create an importable file and examples:
+* PHP
+* MATLAB
 
 ## List of functions
 * auth
@@ -54,8 +49,6 @@ S3D:
 * S3D.export.model.csv
 * S3D.export.model.dxf
 
-
-
 # API File Formats
 
 ## Input
@@ -63,27 +56,27 @@ The following is a simple JSON sample for the API. The functions are listed one 
 
 ```javascript
 {
-  'auth': {
+  "auth": {
     "username": "sam@skyciv.com",
     "key": "sZFl0x6w7iq53bub7sFzhpZuDVMiPJEyVNNaXN6Kb5DfuJl5RIuUTnzK6HwKx4k6"
   },
-  'functions': [
+  "functions": [
     {
-      'function': "S3D.session.start",
-      'arguments': {},
+      "function": "S3D.session.start",
+      "arguments": {},
     },
     {
-      'function': "S3D.file.save",
-      'arguments': {
-        'name': 'API File Name',
-        'path': 'api folder',
+      "function": "S3D.file.save",
+      "arguments": {
+        "name": "API File Name",
+        "path": "api folder",
       },
     },
     {
-      'function': "S3D.member_design.check",
-      'arguments': {
-        'design_code': "AISC_360-16_LRFD", //"AS_4100-1998" 
-        'model': model_data //my structural 3d model
+      "function": "S3D.member_design.check",
+      "arguments": {
+        "design_code": "AISC_360-16_LRFD", //"AS_4100-1998" 
+        "model": model_data //my structural 3d model
     },
     }
   ]
@@ -121,9 +114,25 @@ An array of responses (one for each function run above) will be returned. It wil
 https://jsfiddle.net/estreetdevelopers/z0n184s9/3/
 
 
-## Examples (in Repository)
+# Examples
 
-#### Javascript
+## Add your credentials to run the examples
+Your credentials (found [here](https://platform.skyciv.com/account/settings)) are required if you wish to run the test/example scripts inside the test folders of each language. Add your credentials via the nodeJS or python credential maker:\
+```node credentials/credentials.js YOUR_API_USERNAME YOUR_API_KEY```\
+OR\
+```python credentials/credentials.py YOUR_API_USERNAME YOUR_API_KEY```
+
+Alternatively you can just create the credentials.json file manually in the root of this repo:
+```json
+{
+	"username": "YOUR_USERNAME",
+	"key": "YOUR_API_TOKEN"
+}
+```
+
+NOTE: We recommend changing your API key frequently.
+
+## Javascript
 * To run the browser example for javascript open the javascript/test/browser.html file in your browser. Please add your credentials in the browser.html file first.
 * To run the node example you would run:\
 ```node javascript/test/node```
