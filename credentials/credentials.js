@@ -6,12 +6,12 @@ var _username = process.argv[2];
 var _key = process.argv[3];
 
 if (!_username) {
-	console.log('No username provided');
+	console.log('No API username provided');
 	process.exit(1);
 }
 
 if (!_key) {
-	console.log('No key provided');
+	console.log('No API key provided');
 	process.exit(1);
 }
 
@@ -20,6 +20,6 @@ var auth_obj = {
 	"key": _key
 };
 
-fs.writeFileSync(__dirname + '/credentials.json', JSON.stringify(auth_obj));
+fs.writeFileSync(__dirname + './../credentials.json', JSON.stringify(auth_obj));
 
 console.log('credentials.json created successfully');
