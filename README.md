@@ -129,8 +129,8 @@ python credentials/credentials.py YOUR_API_USERNAME YOUR_API_KEY
 Alternatively you can just create the credentials.json file manually in the root of this repo:
 ```json
 {
-	"username": "YOUR_USERNAME",
-	"key": "YOUR_API_TOKEN"
+	"username": "YOUR_API_USERNAME ",
+	"key": "YOUR_API_KEY"
 }
 ```
 
