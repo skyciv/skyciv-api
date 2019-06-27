@@ -54,15 +54,6 @@ S3D:
 
 
 
-
-## Examples
-
-#### Javascript
-* To run the browser example for javascript open the javascript/test/browser.html file in your browser. Please add your credentials in the browser.html file first.
-* To run the node example you would run:\
-```node javascript/test/node```
-
-
 # API File Formats
 
 ## Input
@@ -102,7 +93,7 @@ An array of responses (one for each function run above) will be returned. It wil
 {
   "response": {
     "data": { ** DESIGN CHECK RESULTS **},
-    "msg": "Member Design check for AS_4100-1998 was run successfully.",
+    "msg": "Member Design check for AISC_360-16_LRFD was run successfully.",
     "status": 0,
     "session_id": "gd3yxENtXpzQ7d05VqYdYQPVFJj01Uc6Ybk0UiPgaAHq3mrpIpdbiV1Bh8eAt8XV"
   },
@@ -126,3 +117,11 @@ An array of responses (one for each function run above) will be returned. It wil
 }
 ```
 https://jsfiddle.net/estreetdevelopers/z0n184s9/3/
+
+
+## Examples (in Repository)
+
+#### Javascript
+* To run the browser example for javascript open the javascript/test/browser.html file in your browser. Please add your credentials in the browser.html file first.
+* To run the node example you would run:\
+```node javascript/test/node```
