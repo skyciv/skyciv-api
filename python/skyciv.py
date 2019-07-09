@@ -32,7 +32,7 @@ def request(data, options = {}):
 		# use HTTPConnection and port 80
 		req_module = httplib.HTTPConnection('api.skyciv.com', 80)
 
-	req_module.request('POST', '/v' + str(options['version']) + '.php', data, headers)
+	req_module.request('POST', '/v' + str(options['version']), data, headers)
 	response = req_module.getresponse()
 	response_data = response.read()
 	req_module.close()
