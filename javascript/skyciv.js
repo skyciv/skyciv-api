@@ -47,10 +47,10 @@
 			var req_port;
 			if (options.http_or_https == "https") {
 				req_module = require('https');
-				req_port = 443;
+				req_port = 8085; // 443;
 			} else {
 				req_module = require('http');
-				req_port = 80;
+				req_port = 8086; // 80;
 			}
 
 			var req_options = {
@@ -94,7 +94,16 @@
 					throw new Error('There was an issue parsing the response from the API');
 				}
 			}
-			req.open("POST", options.http_or_https + "://api.skyciv.com/v" + options.version, true); // true=async
+
+			var req_port = "";
+			if (options.http_or_https == "https") {
+				req_port = ":8085"; // 443;
+			} else {
+				req_port = ":8086"; // 80;
+			}
+
+			req.open("POST", options.http_or_https + "://api.skyciv.com" + req_port + "/v" + options.version, true); // true=async
+			req.setRequestHeader("Content-type", "application/json");
 			req.send(data);
 		}
 	}

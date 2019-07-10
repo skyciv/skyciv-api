@@ -27,10 +27,10 @@ def request(data, options = {}):
 
 	if options['http_or_https'] is "https":
 		# use HTTPSConnection and port 443
-		req_module = httplib.HTTPSConnection('api.skyciv.com', 443)
+		req_module = httplib.HTTPSConnection('api.skyciv.com', 8085) # 443
 	else:
 		# use HTTPConnection and port 80
-		req_module = httplib.HTTPConnection('api.skyciv.com', 80)
+		req_module = httplib.HTTPConnection('api.skyciv.com', 8086) # 80
 
 	req_module.request('POST', '/v' + str(options['version']), data, headers)
 	response = req_module.getresponse()

@@ -8,7 +8,7 @@ credentials = {
 }
 
 # Get credentials from credentials.json if it exists
-credentials_file = './../credentials.json'
+credentials_file = './credentials.json'
 if os.path.isfile(credentials_file):
 	f = open(credentials_file, "r")
 	credentials = json.loads(f.read())
