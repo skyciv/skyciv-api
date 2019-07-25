@@ -37,4 +37,14 @@ def request(data, options = {}):
 	response_data = response.read()
 	req_module.close()
 
+	if not response_data:
+		response_data = {
+			"response": {
+				"status": 1,
+				"msg": "No response was received from the API. Please contact support@skyciv.com for more assistance with this.",
+			}
+		}
+
+		response_data = json.dumps(response_data, separators=(',', ':')) # TODO not sure if this should be stringified
+
 	return response_data

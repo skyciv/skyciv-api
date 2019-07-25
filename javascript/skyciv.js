@@ -7,6 +7,7 @@
 	var root = this
 	var previous_skyciv = root.skyciv
 	var current_API_version_endpoint = 3
+	var timeout = 30*60*1000 // 30 mins
 
 	var has_require = typeof require !== 'undefined'
 
@@ -60,8 +61,9 @@
 				method: 'POST',
 				headers: { // these are compulsory for it to work properly
 					'Content-Type': 'application/json',
-					'Content-Length': data.length
-				}
+					'Content-Length': Buffer.byteLength(data),
+				},
+				//timeout: timeout
 			};
 			var req = req_module.request(req_options, function(res) {
 				res.setEncoding('utf8');
@@ -72,28 +74,52 @@
 				});
 
 				res.on('end', function () {
+					if (!res_data) {
+						res_data = JSON.stringify({
+							"response": {
+								"status": 1,
+								"msg": "No response was received from the API. Please contact support@skyciv.com for more assistance with this.",
+							}
+						});
+					}
 					callback(res_data);
 				});
 			});
-			
+
 			req.on('error', function(e){
-				console.log('problem with request: ' + e.message);
+				console.log('Problem with request: ' + e.message);
 			});
+
+			/*
+			req.setTimeout(timeout, function() {
+				req.abort();
+			});
+			*/
 
 			// Send the object as a JSON string
 			req.write(data);
 			req.end();
 		} else {
 			var req = new XMLHttpRequest();
+
 			req.onreadystatechange = function() {
 				try {
 					if (req.readyState == XMLHttpRequest.DONE) {
+						if (!req.responseText) {
+							req.responseText = JSON.stringify({
+								"response": {
+									"status": 1,
+									"msg": "No response was received from the API. Please contact support@skyciv.com for more assistance with this.",
+								}
+							});
+						}
 						if (callback) callback(JSON.parse(req.responseText));
 					}
 				} catch (e) {
-					throw new Error('There was an issue parsing the response from the API');
+					// TODO possibly don't throw error here but rather put the error in the response
+					throw new Error('There was an issue parsing the response from the API. Please contact support@skyciv.com for more assistance with this.');
 				}
-			}
+			};
 
 			var req_port = "";
 			if (options.http_or_https == "https") {
@@ -102,6 +128,7 @@
 				req_port = ":8086"; // 80;
 			}
 
+			//req.timeout = timeout;
 			req.open("POST", options.http_or_https + "://api.skyciv.com" + req_port + "/v" + options.version, true); // true=async
 			req.setRequestHeader("Content-type", "application/json");
 			req.send(data);
