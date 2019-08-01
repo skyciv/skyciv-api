@@ -103,22 +103,30 @@
 			var req = new XMLHttpRequest();
 
 			req.onreadystatechange = function() {
+				var res;
 				try {
 					if (req.readyState == XMLHttpRequest.DONE) {
 						if (!req.responseText) {
-							req.responseText = JSON.stringify({
+							res = {
 								"response": {
 									"status": 1,
 									"msg": "No response was received from the API. Please contact support@skyciv.com for more assistance with this.",
 								}
-							});
+							};
 						}
-						if (callback) callback(JSON.parse(req.responseText));
+						
 					}
 				} catch (e) {
-					// TODO possibly don't throw error here but rather put the error in the response
-					throw new Error('There was an issue parsing the response from the API. Please contact support@skyciv.com for more assistance with this.');
+					res = {
+						"response": {
+							"status": 2,
+							"msg": 'There was an issue parsing the response from the API. Please contact support@skyciv.com for more assistance with this.',
+						}
+					};
 				}
+
+				if (typeof res === "string") res = JSON.parse(res);
+				if (callback) callback(res);
 			};
 
 			var req_port = "";
