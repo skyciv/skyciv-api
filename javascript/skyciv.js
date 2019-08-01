@@ -103,21 +103,22 @@
 			var req = new XMLHttpRequest();
 
 			req.onreadystatechange = function() {
-				var res;
+				var response_obj;
 				try {
 					if (req.readyState == XMLHttpRequest.DONE) {
-						if (!req.responseText) {
-							res = {
+						if (req.responseText) {
+							response_obj = JSON.parse(req.responseText);
+						} else {
+							response_obj = {
 								"response": {
 									"status": 1,
 									"msg": "No response was received from the API. Please contact support@skyciv.com for more assistance with this.",
 								}
 							};
 						}
-						
 					}
 				} catch (e) {
-					res = {
+					response_obj = {
 						"response": {
 							"status": 2,
 							"msg": 'There was an issue parsing the response from the API. Please contact support@skyciv.com for more assistance with this.',
@@ -125,8 +126,8 @@
 					};
 				}
 
-				if (typeof res === "string") res = JSON.parse(res);
-				if (callback) callback(res);
+				if (typeof response_obj === "string") response_obj = JSON.parse(response_obj);
+				if (callback) callback(response_obj);
 			};
 
 			var req_port = "";
