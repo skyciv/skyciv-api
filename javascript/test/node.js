@@ -38,5 +38,6 @@ var data = {
 };
 
 skyciv.request(data, function(res) {
-	console.log(res);
+	console.log('Finished. See response in response.json file');
+	fs.writeFileSync(__dirname + '/response.json', res);
 });
