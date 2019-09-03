@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link href="./main.css" rel="stylesheet">
+
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script src="https://raw.githubusercontent.com/skyciv/skyciv-api/master/javascript/skyciv.js"></script>
+	<script src="./main.js"></script>
+</head>
+
+<body>
+	<a href="#" class="function-selector">S3D.model.save</a> - saves model to cloud storage<br>
+	<a href="#" class="function-selector">S3D.member_design.getInput</a> - get a member design input object. Can be modified
+	and used in .check<br>
+	<a href="#" class="function-selector">S3D.member_design.check</a> - runs steel member design check (based on structural
+	3d data<br>
+	<a href="#" class="function-selector">S3D.member_design.passFailCheck</a> - runs member design check returns simplified
+	pass/check result<br>
+	<a href="#" class="function-selector">S3D.model.solve</a> - returns the result of a structural analysis<br>
+	<a href="#" class="function-selector">S3D.results.fetchMemberResult</a> - get results, graphs of a member<br>
+	<a href="#" class="function-selector">S3D.results.getAnalysisReport</a><br>
+	<a href="#" class="function-selector">S3D.export.model.csv</a> - returns the member data in csv format<br>
+	<a href="#" class="function-selector">S3D.model.takeScreenshot</a><br>
+
+
+	<div id="status-bar">Select an action. (Open console for more info)</div>
+	<div id="output"></div>
+
+</body>
+
+</html>
