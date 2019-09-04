@@ -9,6 +9,7 @@
 
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+	<script src="https://api.skyciv.com/dist/v3/javascript/skyciv.js"></script>
 	<link rel="stylesheet" href="https://semantic-ui.com/dist/semantic.css" />
 
 	<style>
@@ -103,17 +104,9 @@
 				]
 			}
 
-			$.ajax({
-				url: "https://api.skyciv.com:8085/v3",
-				data: JSON.stringify(api_object),
-				type: "POST",
-				success: function (data) {
-					//API response
-					finalizeResult(data.response);
-				}
-			});
-
-			
+			skyciv.request(data, function (res) {
+				finalizeResult(res.response);
+			})
 
 		}
 

@@ -14,8 +14,20 @@ a:hover {
 #output {
    width: 100%;
    margin-top: 20px;
+   padding: 20px;
    background: #a5a4f11c;
-   height: 400px;
+   height: auto;
    display: none;
+}
+
+.right-side, .left-side {
+    width: 48%;
+    padding: 1%;
+    float: left;
+}
+
+.left-side textarea {
+    width: 80%;
+    height: 200px;
 }
 
