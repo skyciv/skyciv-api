@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link href="./main.css" rel="stylesheet">
+
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script src="https://api.skyciv.com/dist/v3/javascript/skyciv.js"></script>
+	<script>
+	
+		var model_data = {
+				"nodes": {
+					"1": {
+						"x": 0,
+						"y": 0,
+						"z": 0
+					},
+					"2": {
+						"x": 2,
+						"y": 0,
+						"z": 0
+					}
+				},
+				"members": {
+					"1": {
+						"node_A": 1,
+						"node_B": 2,
+						"section_id": 1
+					}
+				},
+				"sections": {
+					"1": {
+						"load_section": [
+							"American",
+							"AISC",
+							"W shapes",
+							"W14x808"
+						]
+					}
+				},
+				"supports": {
+					"1": {
+						"node": 1,
+						"restraint_code": "FFFFFF"
+					}
+				},
+				"point_loads": {
+					"1": {
+						"type": "n",
+						"node": 2,
+						"x_mag": 0,
+						"y_mag": -5,
+						"z_mag": 0,
+						"load_group": "Live_PL"
+					},
+					"2": {
+						"type": "M",
+						"member": 1,
+						"position": 50,
+						"x_mag": -2.5,
+						"y_mag": 0,
+						"z_mag": 0,
+						"load_group": "Live_PL"
+					}
+				},
+				"distributed_loads": {
+					"1": {
+						"member": 1,
+						"x_mag_A": 0,
+						"y_mag_A": -1,
+						"z_mag_A": 0,
+						"x_mag_B": 0,
+						"y_mag_B": -2,
+						"z_mag_B": 0,
+						"position_A": 10,
+						"position_B": 90,
+						"load_group": "Live_DL",
+						"axes": "global"
+					}
+				},
+				"self_weight": {
+					"1": {
+						"LG": "SW1",
+						"x": 0,
+						"y": -1,
+						"z": 0
+					}
+				}
+			}
+
+		
+
+		jQuery(document).ready(function () {
+
+			jQuery("#run-api").click(function () {
+
+				var auth_username = "sam@skyciv.com";
+				var auth_token_key = "sZFl0x6w7iq53bub7sFzhpZuDVMiPJEyVNNaXN6Kb5DfuJl5RIuUTnzK6HwKx4k6";
+
+				var api_object = {
+					auth: {
+						username: auth_username,
+						key: auth_token_key
+					},
+					functions: [
+						{
+							'function': "S3D.session.start",
+							'arguments': {},
+						},
+						{
+							'function': "S3D.model.set",
+							'arguments': {
+								's3d_model': model_data
+							},
+						},
+						{
+							'function': "S3D.model.repair",
+							'arguments': {
+								//'s3d_model': model_data
+							},
+						},
+						{
+							'function': "S3D.model.solve",
+							'arguments': {},
+						},
+						{
+							'function': "S3D.results.fetchMemberResult",
+							'arguments': {
+								"member_id": 1, //null = all
+								"LC": [], 
+								"res_key": "bmd_z",
+								"type": "image", //x,y, array, image
+							},
+						},
+					]
+				};
+
+
+				runApi(api_object);
+
+
+			})
+
+		})
+
+
+
+		function runApi(data) {
+
+			jQuery("#status-bar").html("Running...");
+			jQuery("#output").html("");
+			console.log("--- Object sent to API ---");
+			console.log(data);
+
+			$.ajax({
+				url: "https://api.skyciv.com:8085/v3",
+				data: JSON.stringify(data),
+				type: "POST",
+				success: function (data) {
+
+					console.log("--- Response ---");
+					console.log(data);
+					var response = data.response;
+
+					jQuery("#status-bar").html(response.msg);
+
+					if (response.status == 0) { //successful
+						jQuery("#output").show().html(JSON.stringify(response.data));
+
+						//custom result handling
+						if (function_name == "S3D.model.takeScreenshot") {
+							var screenshots = response.data;
+							jQuery("#output").html("");
+							for (n in screenshots) {
+								jQuery("#output").append("<img src='" + screenshots[n] + "'/>");
+							}
+						}
+						if (function_name == "S3D.results.fetchMemberResult") {
+							var screenshots = response.data;
+							jQuery("#output").html("");
+							for (n in screenshots) {
+								jQuery("#output").append("<img src='" + screenshots[n] + "'/>");
+							}
+						}
+
+					}
+				}
+
+
+			});
+
+
+		}
+
+
+	
+
+	
+	</script>
+</head>
+
+<body>
+	<a href="#" id="run-api">Run API</a><br>
+
+
+	<div id="status-bar">Select an action. (Open console for more info)</div>
+	<div id="output"></div>
+
+</body>
+
+</html>
