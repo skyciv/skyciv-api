@@ -29,7 +29,7 @@ DOCS COMING SOON
 # Examples
 
 ### Add your credentials to run the examples
-Your credentials (found [here](https://platform.skyciv.com/account/settings)) are required if you wish to run the test/example scripts inside the test folders of each language. Add your credentials via the nodeJS or python credential maker:
+Your credentials (found [here](https://platform.skyciv.com/account/api)) are required if you wish to run the test/example scripts inside the test folders of each language. Add your credentials via the nodeJS or python credential maker:
 ```
 node credentials/credentials.js YOUR_API_USERNAME YOUR_API_KEY
 ```
