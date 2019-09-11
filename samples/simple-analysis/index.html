@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+	<title>SkyCiv API Sample</title>
 
 <head>
 	<link href="./main.css" rel="stylesheet">
@@ -9,6 +10,9 @@
 	<script>
 	
 		var model_data = {
+				"settings": {
+					"units": "imperial",
+				},
 				"nodes": {
 					"1": {
 						"x": 0,
@@ -35,8 +39,18 @@
 							"AISC",
 							"W shapes",
 							"W14x808"
-						]
+						],
+						"material_id":1
 					}
+				},
+				"materials": {
+					"1": {
+						"name": "Structural Steel",
+						"density": 7850,
+						"elasticity_modulus": 200000,
+						"poissons_ratio": 0.27,
+						"id": 1
+					},
 				},
 				"supports": {
 					"1": {
@@ -57,8 +71,8 @@
 						"type": "M",
 						"member": 1,
 						"position": 50,
-						"x_mag": -2.5,
-						"y_mag": 0,
+						"x_mag": 0,
+						"y_mag": -2.5,
 						"z_mag": 0,
 						"load_group": "Live_PL"
 					}
@@ -89,7 +103,6 @@
 			}
 
 		
-
 		jQuery(document).ready(function () {
 
 			jQuery("#run-api").click(function () {
@@ -114,24 +127,18 @@
 							},
 						},
 						{
-							'function': "S3D.model.repair",
-							'arguments': {
-								//'s3d_model': model_data
-							},
-						},
-						{
 							'function': "S3D.model.solve",
 							'arguments': {},
 						},
-						{
-							'function': "S3D.results.fetchMemberResult",
-							'arguments': {
-								"member_id": 1, //null = all
-								"LC": [], 
-								"res_key": "bmd_z",
-								"type": "image", //x,y, array, image
-							},
-						},
+						// {
+						// 	'function': "S3D.results.fetchMemberResult",
+						// 	'arguments': {
+						// 		"member_id": 1, //null = all
+						// 		"LC": [], 
+						// 		"res_key": "bmd_z",
+						// 		"type": "image", //x,y, array, image
+						// 	},
+						// },
 					]
 				};
 
@@ -145,50 +152,25 @@
 
 
 
-		function runApi(data) {
+		function runApi(api_object) {
 
 			jQuery("#status-bar").html("Running...");
 			jQuery("#output").html("");
+
 			console.log("--- Object sent to API ---");
-			console.log(data);
+			console.log(api_object);
 
-			$.ajax({
-				url: "https://api.skyciv.com:8085/v3",
-				data: JSON.stringify(data),
-				type: "POST",
-				success: function (data) {
+			//call API
+			skyciv.request(api_object, function (res) {
+				console.log("--- Response ---");
+				console.log(res);
+				var response = res.response;
+				jQuery("#status-bar").html(response.msg);
 
-					console.log("--- Response ---");
-					console.log(data);
-					var response = data.response;
-
-					jQuery("#status-bar").html(response.msg);
-
-					if (response.status == 0) { //successful
-						jQuery("#output").show().html(JSON.stringify(response.data));
-
-						//custom result handling
-						if (function_name == "S3D.model.takeScreenshot") {
-							var screenshots = response.data;
-							jQuery("#output").html("");
-							for (n in screenshots) {
-								jQuery("#output").append("<img src='" + screenshots[n] + "'/>");
-							}
-						}
-						if (function_name == "S3D.results.fetchMemberResult") {
-							var screenshots = response.data;
-							jQuery("#output").html("");
-							for (n in screenshots) {
-								jQuery("#output").append("<img src='" + screenshots[n] + "'/>");
-							}
-						}
-
-					}
+				if (response.status == 0) { //successful
+					jQuery("#output").show().html(JSON.stringify(response.data));
 				}
-
-
 			});
-
 
 		}
 

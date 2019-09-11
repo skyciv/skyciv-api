@@ -27,7 +27,7 @@ data = {
 		{
 			'function': "S3D.model.set",
 			'arguments': {
-				'model': model_data
+				's3d_model': model_data
 			},
 		},
 		{

@@ -194,7 +194,7 @@ function getSampleObject(function_name) {
 				'function': "S3D.results.fetchMemberResult",
 				'arguments': {
 					"member_id": 228, //null = all
-					"LC": [1,2,3], //[] = all //DECISION: how do we handle incomplete LC's? Right now returning null 
+					"LC": [1, 2, 3], //[] = all //DECISION: how do we handle incomplete LC's? Right now returning null 
 					"res_key": "bmd_z",
 					"type": "image", //x,y, array, image
 				},
@@ -297,7 +297,7 @@ function runApi(data, function_name) {
 
 				var html_str = "";
 				html_str += "<a href='" + report_obj.download_link + "'>Download PDF</a><br><br>";
-				html_str += "<iframe id='report-preview' src='" + report_obj.view_link + "' style='width:50%;' height: 800px;'></iframe>"; 
+				html_str += "<iframe id='report-preview' src='" + report_obj.view_link + "' style='width:50%; height: 800px;'></iframe>";
 				jQuery("#output").html(html_str);
 
 
