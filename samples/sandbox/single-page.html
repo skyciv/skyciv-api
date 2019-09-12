@@ -277,7 +277,7 @@
 
 	jQuery(document).ready(function () {
 
-		jQuery("#model-data").val(JSON.stringify(model_data));
+		jQuery("#model-data").val(JSON.stringify(model_data, null, '\t'));
 
 		jQuery(".function-selector").click(function () {
 			var link_text = jQuery(this).html();
