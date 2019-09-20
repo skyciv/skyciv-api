@@ -23,7 +23,7 @@ Eventually we will create an importable file and examples:
 
 Please read the API docs which explains the API functions here:
 ```
-DOCS COMING SOON
+https://skyciv.com/api/v3
 ```
 
 # Examples
