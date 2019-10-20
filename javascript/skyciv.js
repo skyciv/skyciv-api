@@ -156,3 +156,11 @@
 	}
 
 }).call(this); // this makes it equal to the window object if you're running it in a browser
+
+if (typeof SKYCIV !== "undefined") {
+	SKYCIV.request = skyciv.request; // include the skyciv request function in the already existing SKYCIV namespace
+} else {
+	if (typeof window !== "undefined" && window.skyciv) {
+		window.SKYCIV = window.skyciv; // make SKYCIV and skyciv the same
+	}
+}
