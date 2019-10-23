@@ -82,7 +82,7 @@
 							}
 						});
 					}
-					callback(res_data);
+					callback(res_data, options);
 				});
 			});
 
@@ -126,7 +126,7 @@
 					}
 
 					if (typeof response_obj === "string") response_obj = JSON.parse(response_obj);
-					if (callback) callback(response_obj);
+					if (callback) callback(response_obj, options);
 				}
 			};
 
