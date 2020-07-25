@@ -7,46 +7,48 @@ using System.Text;
 
 namespace SkyCiv
 {
-    public class SkyCivOptions
-    {
-        
-    }
-
     public static class SkyCiv
     {
-        public static void Request(string data)
+        /// <summary>
+        /// Make a request to the SkyCiv api.
+        /// </summary>
+        /// <param name="requestBody">Serialized JSON including auth and function data.</param>
+        /// <returns>Response from the SkyCiv API.</returns>
+        public static string Request(string requestBody)
         {
             string route = "https://api.skyciv.com/v3";
-            ApiRequestWithAuth("POST", "STRING", route, data);
+            return StandardizeApiRequest("POST", route, requestBody);
         }
 
-        public static dynamic ApiRequestWithAuth(string requestType, string responseType, string route, object jsonObject)
+        /// <summary>
+        /// Make a generic post/get request.
+        /// </summary>
+        /// <param name="requestType">Type of request. E.g. "GET" or "POST".</param>
+        /// <param name="url">The full path to the API endpoint.</param>
+        /// <param name="jsonArguments">Request body.</param>
+        /// <returns>Request response.</returns>
+        private static string StandardizeApiRequest(string requestType, string url, string jsonObject)
         {
-            string jsonArguments = JsonConvert.SerializeObject(jsonObject, Formatting.Indented);
-            return ApiRequestWithAuth(requestType, responseType, route, jsonArguments);
-        }
-           
-        public static dynamic ApiRequestWithAuth(string requestType, string responseType, string route, string jsonObject)
-        {
-            string jsonArguments = jsonObject;
-
             using (var client = new WebClient())
             {
-                //client.Headers[HttpRequestHeader.Authorization] = "Basic " + this.token;
-                //client.Headers[HttpRequestHeader.Accept] = "application/json";
                 client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                return StandardizeApiRequest(client, requestType, responseType, route, jsonArguments);
+                return StandardizeApiRequest(client, requestType, url, jsonObject);
             }
         }
 
-        public static dynamic StandardizeApiRequest(WebClient client, string requestType, string responseType, string url, string jsonArguments)
+        /// <summary>
+        /// Make a generic post/get request.
+        /// </summary>
+        /// <param name="client">Web client object to use for the request.</param>
+        /// <param name="requestType">Type of request. E.g. "GET" or "POST".</param>
+        /// <param name="url">The full path to the API endpoint.</param>
+        /// <param name="jsonArguments">Request body.</param>
+        /// <returns>Request response.</returns>
+        private static dynamic StandardizeApiRequest(WebClient client, string requestType, string url, string jsonArguments)
         {
             var bytes = Encoding.UTF8.GetBytes(jsonArguments);
-            client.Headers[HttpRequestHeader.ContentLength] = bytes.Length.ToString();
-
-        var responseString = "";
-            dynamic responseJson = null;
-
+            var responseString = "";
+            
             try
             {
                 if (requestType == "POST")
@@ -58,26 +60,14 @@ namespace SkyCiv
                 {
                     responseString = client.DownloadString(url);
                 }
-
-                responseJson = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(responseString);
             }
             catch (Exception e)
             {
-                object a = e;
-
-                // do nothing
+                string errorMsg = "An error occured: " + e.ToString();
+                Console.WriteLine(errorMsg);
+                return errorMsg;
             }
-
-            if (responseType == "STRING")
-            {
-                return responseString;
-            }
-            else
-            {
-                return responseJson;
-            }
+            return responseString;
         }
-
-
     }
 }
