@@ -8,7 +8,7 @@ Simple example of how to call into the SkyCiv API from a console application wri
 - change the _"YOUR_API_USERNAME_HERE"_  and _"YOUR_API_KEY_HERE"_ fields in the `full-req.json` to your own credentials.
 - `cd csharp` 
 - `dotnet run`
-- or simply open the SkyCiv.sln in VS2019 and hit run.
+- or simply open the SkyCiv.sln file in VS2019 and hit run.
 
 ## Roadmap
 - Separate the API username/api-key from the `full-req.json` in a more elegant way.
