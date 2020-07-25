@@ -1,6 +1,6 @@
 credentials.json
 javascript/test/timeout.js
 .history/
-csharp/SkyCiv/bin/
-csharp/SkyCiv/obj/
-csharp/SkyCiv/.vs/
+csharp/bin/
+csharp/obj/
+csharp/.vs/
