@@ -60,3 +60,11 @@ node javascript/test/node
 ```
 python python/test.py
 ```
+
+### CSharp
+* To run the C# example, simply run:
+```
+cd csharp
+dotnet run
+```
+or open the SkyCiv.sln in VS2019 and hit run. For more info, check out the README file in the csharp folder.
