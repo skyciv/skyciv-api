@@ -1,2 +1,6 @@
 credentials.json
 javascript/test/timeout.js
+.history/
+csharp/bin/
+csharp/obj/
+csharp/.vs/
