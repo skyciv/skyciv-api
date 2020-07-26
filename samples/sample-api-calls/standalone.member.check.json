@@ -1,0 +1,83 @@
+{
+	"auth": {
+		"username": "XXX",
+		"key": "XXX"
+	},
+	"functions": [
+		{
+			"function": "standalone.member.check",
+			"arguments": {
+				"units": "imperial",
+				"design_code": "AISC_360-10_ASD",
+				"sections": [
+					[
+						"American",
+						"AISC",
+						"W shapes",
+						"W14x808"
+					],
+					[
+						"American",
+						"AISC",
+						"Rectangular HSS",
+						"HSS2x1-1/2x3/16"
+					]
+				],
+				"materials": [
+					{
+						"id": 1,
+						"name": "Some Custom Structural Steel",
+						"density": 450,
+						"elasticity_modulus": 29000,
+						"poissons_ratio": 0.27,
+						"yield_strength": 33,
+						"ultimate_strength": 52,
+						"class": "steel"
+					}
+				],
+				"forces": [
+					{
+						"axial": 10,
+						"Fz": 10,
+						"Fy": 15,
+						"torsion": 3,
+						"Mz": -0.5,
+						"My": -0.5
+					}
+				],
+				"design_members": [
+					{
+						"L": 12,
+						"Lb": 10,
+						"Cb": 1,
+						"Ky": 1,
+						"Kz": 1,
+						"sr_c": 200,
+						"sr_t": 300,
+						"element_id": 1,
+						"section_id": 2,
+						"material_id": 1
+					},
+					{
+						"L": 8,
+						"Lb": 6,
+						"Cb": 1,
+						"Ky": 1,
+						"Kz": 1,
+						"sr_c": 200,
+						"sr_t": 300,
+						"element_id": 1,
+						"section_id": 1,
+						"material_id": 1
+					}
+				],
+				"design_factors": {
+					"omega_t": 1.67,
+					"omega_c": 2.00,
+					"omega_b": 1.70,
+					"omega_v": 1.67
+				}
+			}
+		}
+	]
+}

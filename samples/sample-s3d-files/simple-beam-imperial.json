@@ -1,0 +1,102 @@
+    {
+		"settings": {
+			"units": "imperial"
+		},
+		"nodes": {
+			"1": {
+				"x": 0,
+				"y": 0,
+				"z": 0
+			},
+			"2": {
+				"x": 2,
+				"y": 0,
+				"z": 0
+			}
+		},
+		"members": {
+			"1": {
+				"node_A": 1,
+				"node_B": 2,
+				"section_id": 1
+			}
+		},
+		"sections": {
+			"1": {
+				"load_section": [
+					"American",
+					"AISC",
+					"W shapes",
+					"W14x808"
+				],
+				"material_id": 1
+			}
+		},
+		"materials": {
+			"1": {
+				"name": "Structural Steel",
+				"density": 7850,
+				"elasticity_modulus": 200000,
+				"yield_strength": 38,
+				"ultimate_strength": 60,
+				"poissons_ratio": 0.27,
+				"class": "steel"
+			}
+		},
+		"supports": {
+			"1": {
+				"node": 1,
+				"restraint_code": "FFFFFF"
+			}
+		},
+		"point_loads": {
+			"1": {
+				"type": "n",
+				"node": 2,
+				"x_mag": 0,
+				"y_mag": -5,
+				"z_mag": 0,
+				"load_group": "LiveLoad"
+			},
+			"2": {
+				"type": "M",
+				"member": 1,
+				"position": 50,
+				"x_mag": 0,
+				"y_mag": -2.5,
+				"z_mag": 0,
+				"load_group": "DeadLoad"
+			}
+		},
+		"distributed_loads": {
+			"1": {
+				"member": 1,
+				"x_mag_A": 0,
+				"y_mag_A": -1,
+				"z_mag_A": 0,
+				"x_mag_B": 0,
+				"y_mag_B": -2,
+				"z_mag_B": 0,
+				"position_A": 10,
+				"position_B": 90,
+				"load_group": "LiveLoad",
+				"axes": "global"
+			}
+		},
+		"self_weight": {
+			"1": {
+				"LG": "SW1",
+				"x": 0,
+				"y": -1,
+				"z": 0
+			}
+		},
+		"load_combinations": {
+			"1": {
+				"name": "LC1",
+				"SW1": 1.2,
+				"LiveLoad": 1.5,
+				"DeadLoad": 1.2
+			}
+		}
+	}

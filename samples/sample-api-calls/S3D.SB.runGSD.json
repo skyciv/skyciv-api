@@ -1,0 +1,80 @@
+{
+	"auth": {
+		"username": "XXX",
+		"key": "XXX"
+	},
+	"functions": [
+		{
+			"function": "S3D.session.start",
+			"arguments": {}
+		},
+		{
+			"function": "S3D.SB.buildCustomShape",
+			"arguments": {
+				"units": "in",
+				"type": "points",
+				"points": [
+					[
+						0,
+						0,
+						0
+					],
+					[
+						0,
+						12,
+						0
+					],
+					[
+						8,
+						12,
+						0
+					],
+					[
+						8,
+						0,
+						0
+					]
+				],
+				"run_solve": false
+			}
+		},
+		{
+			"function": "S3D.SB.runGSD",
+			"arguments": {
+				"return_stress_results": false,
+				"design_code": "ACI",
+				"concrete_class": "C5000",
+				"steel_grade": "Grade 50",
+				"reinforcement": [
+					{
+						"z": 2,
+						"y": 10,
+						"diam": 0.625
+					},
+					{
+						"z": 4,
+						"y": 10,
+						"diam": 0.625
+					},
+					{
+						"z": 6,
+						"y": 10,
+						"diam": 0.625
+					}
+				],
+				"loads": [
+					{
+						"N": 3.5,
+						"Mz": 1.3,
+						"My": 0.5
+					},
+					{
+						"N": 12.2,
+						"Mz": -2,
+						"My": -0.25
+					}
+				]
+			}
+		}
+	]
+}

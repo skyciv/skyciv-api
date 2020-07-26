@@ -1,0 +1,14 @@
+{
+	"auth": {
+		"username": "XXX",
+		"key": "XXX"
+	},
+	"functions": [
+		{
+			"function": "S3D.file.getFileDirectory",
+			"arguments": {
+				"path": null
+			}
+		}
+	]
+}

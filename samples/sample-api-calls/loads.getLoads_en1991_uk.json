@@ -1,0 +1,53 @@
+{
+	"auth": {
+		"username": "XXX",
+		"key": "XXX"
+	},
+	"functions": [
+		{
+			"function": "loads.getLoads",
+			"arguments": {
+				"site_data": {
+					"design_code": "en1991",
+					"project_address": "Buckingham Palace",
+					"topography": {
+						"season_month": "January-February",
+						"wind_direction": 30,
+						"terrain_category": "I",
+						"topo_image": true,
+						"country": "United Kingdom"
+					}
+				},
+				"building_data": {
+					"design_code": "en1991",
+					"roof_profile": "monoslope",
+					"building_dimensions": {
+						"length": 12.4,
+						"width": 10,
+						"ground_to_top": 21,
+						"roof_angle": 12
+					},
+					"wind_parameters": {
+						"structure_type": "building",
+						"flat_roof_type": "not-applicable",
+						"structure_level": [
+							{
+								"floor_level": "2",
+								"floor_elevation": 3
+							},
+							{
+								"floor_level": "3",
+								"floor_elevation": 6
+							},
+							{
+								"floor_level": "roof",
+								"floor_elevation": 9
+							}
+						]
+					},
+					"snow_parameters": false
+				}
+			}
+		}
+	]
+}

@@ -1,0 +1,79 @@
+{
+	"auth": {
+		"username": "XXX",
+		"key": "XXX"
+	},
+	"functions": [
+		{
+			"function": "loads.getLoads",
+			"arguments": {
+				"site_data": {
+					"design_code": "asce7-16",
+					"project_address": "Wacker Avenue, Chicago",
+					"risk_category": "III",
+					"site_image": true,
+					"topography": {
+						"wind_direction": "N",
+						"exposure": "B",
+						"topo_image": true,
+						"country": "United States"
+					}
+				},
+				"building_data": {
+					"design_code": "asce7-16",
+					"roof_profile": "hip",
+					"building_dimensions": {
+						"length": 12.4,
+						"width": 10,
+						"mean_roof_height": 21,
+						"roof_angle": 12
+					},
+					"wind_parameters": {
+						"structure_type": "mwfrs",
+						"enclosure": "enclosed",
+						"structure_level": [
+							{
+								"floor_level": "2",
+								"floor_elevation": 3
+							},
+							{
+								"floor_level": "3",
+								"floor_elevation": 6
+							},
+							{
+								"floor_level": "roof",
+								"floor_elevation": 9
+							}
+						]
+					},
+					"snow_parameters": {
+						"terrain_category": "B",
+						"exposure_condition_roof": "sheltered",
+						"thermal_condition": "structure-above-freezing",
+						"sloped_roof_surface_condition": "slippery",
+						"unbalanced_snow_load": true,
+						"snow_load_case": [
+							{
+								"snow_case_type": "symmetric_gable",
+								"W": 6.2
+							},
+							{
+								"snow_case_type": "asymmetric_gable",
+								"Wu": 8,
+								"Wd": 4.2,
+								"theta_u": 11,
+								"theta_d": 15
+							},
+							{
+								"snow_case_type": "lower_roof",
+								"lu": 10,
+								"hr": 3,
+								"ld": 8
+							}
+						]
+					}
+				}
+			}
+		}
+	]
+}

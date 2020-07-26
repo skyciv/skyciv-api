@@ -1,0 +1,22 @@
+{
+	"auth": {
+		"username": "XXX",
+		"key": "XXX"
+	},
+	"functions": [
+		{
+			"function": "S3D.session.start",
+			"arguments": {}
+		},
+		{
+			"function": "S3D.SB.getLibraryTree",
+			"arguments": {
+				"section_map": [
+					"American",
+					"AISC",
+					"W shapes"
+				]
+			}
+		}
+	]
+}

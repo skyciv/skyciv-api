@@ -1,0 +1,70 @@
+{
+	"auth": {
+		"username": "XXX",
+		"key": "XXX"
+	},
+	"functions": [
+		{
+			"function": "loads.getLoads",
+			"arguments": {
+				"site_data": {
+					"design_code": "nbcc2015",
+					"project_address": "Toronto",
+					"ari": "10_years",
+					"importance_level": "low",
+					"limit_state": "SLS",
+					"map_image": true,
+					"topography": {
+						"wind_direction": "N",
+						"terrain_category": "A",
+						"topo_image": true,
+						"country": "Canada"
+					}
+				},
+				"building_data": {
+					"design_code": "nbcc2015",
+					"roof_profile": "gable",
+					"building_dimensions": {
+						"length": 12.4,
+						"width": 10,
+						"reference_height": 21,
+						"roof_angle": 12
+					},
+					"wind_parameters": {
+						"structure_type": "mwfrs",
+						"enclosure": "enclosed"
+					},
+					"snow_parameters": {
+						"sloped_roof_surface_condition": "slippery",
+						"unbalanced_snow_load": true,
+						"snow_load_case": [
+							{
+								"snow_case_type": "multilevel_roof_case1",
+								"ls": 20,
+								"ws": 13,
+								"h": 13,
+								"hp": 13,
+								"alpha": 13,
+								"sliding": true,
+								"a": 13
+							},
+							{
+								"snow_case_type": "areas_adjacent_to_roof_projections",
+								"ls": 20,
+								"ws": 13,
+								"h": 13,
+								"lh10": 13
+							},
+							{
+								"snow_case_type": "gable_roof",
+								"ls": 20,
+								"ws": 13,
+								"alpha": 13
+							}
+						]
+					}
+				}
+			}
+		}
+	]
+}

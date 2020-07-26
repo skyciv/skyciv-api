@@ -1,0 +1,26 @@
+{
+	"auth": {
+		"username": "XXX",
+		"key": "XXX"
+	},
+	"functions": [
+		{
+			"function": "loads.getLoads",
+			"arguments": {
+				"site_data": {
+					"design_code": "asce7-10",
+					"project_address": "Wacker Avenue, Chicago",
+					"risk_category": "III",
+					"site_image": true,
+					"topography": {
+						"wind_direction": "N",
+						"exposure": "B",
+						"topo_image": true,
+						"country": "United States"
+					}
+				},
+				"building_data": null
+			}
+		}
+	]
+}

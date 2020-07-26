@@ -1,0 +1,444 @@
+{
+	"dataVersion": 23,
+	"settings": {
+		"units": {
+			"length": "m",
+			"section_length": "mm",
+			"material_strength": "mpa",
+			"density": "kg/m3",
+			"force": "kn",
+			"moment": "kn-m",
+			"pressure": "kpa",
+			"mass": "kg",
+			"translation": "mm",
+			"stress": "mpa"
+		},
+		"precision": "fixed",
+		"precision_values": 3,
+		"evaluation_points": 9,
+		"vertical_axis": "Y",
+		"projection_system": "orthographic",
+		"solver_timeout": 600,
+		"accurate_buckling_shape": false,
+		"buckling_johnson": false,
+		"non_linear_tolerance": "1",
+		"non_linear_theory": "small",
+		"auto_stabilize_model": false
+	},
+	"details": {},
+	"nodes": {
+		"1": {
+			"x": 0,
+			"y": 0,
+			"z": 0
+		},
+		"2": {
+			"x": 0,
+			"y": 3.1,
+			"z": 0
+		},
+		"3": {
+			"x": 2.7,
+			"y": 3.1,
+			"z": 0
+		},
+		"4": {
+			"x": 2.7,
+			"y": 0,
+			"z": 0
+		},
+		"5": {
+			"x": 0,
+			"y": 3.1,
+			"z": -3.6
+		},
+		"6": {
+			"x": 0,
+			"y": 0,
+			"z": -3.6
+		},
+		"7": {
+			"x": 2.7,
+			"y": 3,
+			"z": -3.6
+		},
+		"8": {
+			"x": 2.7,
+			"y": 0,
+			"z": -3.6
+		}
+	},
+	"members": {
+		"1": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 1,
+			"node_B": 2,
+			"section_id": 2,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		},
+		"2": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 2,
+			"node_B": 3,
+			"section_id": 1,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		},
+		"3": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 3,
+			"node_B": 4,
+			"section_id": 2,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		},
+		"4": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 2,
+			"node_B": 5,
+			"section_id": 1,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		},
+		"5": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 5,
+			"node_B": 6,
+			"section_id": 2,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		},
+		"6": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 5,
+			"node_B": 7,
+			"section_id": 1,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		},
+		"7": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 7,
+			"node_B": 8,
+			"section_id": 2,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		},
+		"8": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 3,
+			"node_B": 7,
+			"section_id": 1,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		},
+		"9": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 2,
+			"node_B": 4,
+			"section_id": 3,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		},
+		"10": {
+			"type": "normal_continuous",
+			"cable_length": null,
+			"node_A": 3,
+			"node_B": 1,
+			"section_id": 3,
+			"rotation_angle": 0,
+			"fixity_A": "FFFFFF",
+			"fixity_B": "FFFFFF",
+			"offset_Ax": "0",
+			"offset_Ay": "0",
+			"offset_Az": "0",
+			"offset_Bx": "0",
+			"offset_By": "0",
+			"offset_Bz": "0"
+		}
+	},
+	"plates": {},
+	"meshed_plates": {},
+	"sections": {
+		"1": {
+			"load_section": [
+				"Australian",
+				"Steel (250 Grade)",
+				"Universal beams",
+				"310 UB 46"
+			],
+			"material_id": 1
+		},
+		"2": {
+			"load_section": [
+				"Australian",
+				"Steel (300 Grade)",
+				"RHS (Grade 350)",
+				"50x25x2.5 RHS"
+			],
+			"material_id": 1
+		},
+		"3": {
+			"load_section": [
+				"Australian",
+				"Steel (250 Grade)",
+				"Equal angles",
+				"30x3 EA"
+			],
+			"material_id": 1
+		}
+	},
+	"materials": {
+		"1": {
+			"id": 1,
+			"name": "Structural Steel",
+			"density": 7849.04705324,
+			"elasticity_modulus": 199947.962086,
+			"poissons_ratio": 0.27,
+			"yield_strength": 262.000777906,
+			"ultimate_strength": 413.685438798,
+			"class": "steel"
+		},
+		"2": {
+			"id": 2,
+			"name": "Aluminium",
+			"density": 2675.08338345,
+			"elasticity_modulus": 68947.573133,
+			"poissons_ratio": 0.32,
+			"yield_strength": 103.4213597,
+			"ultimate_strength": 151.684660893,
+			"class": "aluminium"
+		},
+		"3": {
+			"id": 3,
+			"name": "Carbon Fibre Reinforced Plastic",
+			"density": 3203.69267479,
+			"elasticity_modulus": 150305.70943,
+			"poissons_ratio": 0.2,
+			"yield_strength": null,
+			"ultimate_strength": 3171.58836412,
+			"class": "other"
+		},
+		"4": {
+			"id": 4,
+			"name": "Concrete",
+			"density": 2402.76950609,
+			"elasticity_modulus": 17236.8932833,
+			"poissons_ratio": 0.2,
+			"yield_strength": null,
+			"ultimate_strength": 3.44737865665,
+			"class": "concrete"
+		},
+		"5": {
+			"id": 5,
+			"name": "Concrete High Strength",
+			"density": 2402.76950609,
+			"elasticity_modulus": 30336.9321785,
+			"poissons_ratio": 0.2,
+			"yield_strength": null,
+			"ultimate_strength": 5.17106798498,
+			"class": "concrete"
+		},
+		"6": {
+			"id": 6,
+			"name": "Oakwood",
+			"density": 897.033948942,
+			"elasticity_modulus": 11031.6117013,
+			"poissons_ratio": 0.3,
+			"yield_strength": 4.48159225365,
+			"ultimate_strength": 5.17106798498,
+			"class": "wood"
+		},
+		"7": {
+			"id": 7,
+			"name": "Glass",
+			"density": 2562.95413983,
+			"elasticity_modulus": 68947.573133,
+			"poissons_ratio": 0.24,
+			"yield_strength": null,
+			"ultimate_strength": 33.0948351039,
+			"class": "other"
+		}
+	},
+	"supports": {
+		"1": {
+			"tx": 0,
+			"ty": 0,
+			"tz": 0,
+			"rx": 0,
+			"ry": 0,
+			"rz": 0,
+			"node": 1,
+			"restraint_code": "FFFFRR"
+		},
+		"2": {
+			"tx": 0,
+			"ty": 0,
+			"tz": 0,
+			"rx": 0,
+			"ry": 0,
+			"rz": 0,
+			"node": 4,
+			"restraint_code": "FFFFRR"
+		},
+		"3": {
+			"tx": 0,
+			"ty": 0,
+			"tz": 0,
+			"rx": 0,
+			"ry": 0,
+			"rz": 0,
+			"node": 6,
+			"restraint_code": "FFFFRR"
+		},
+		"4": {
+			"tx": 0,
+			"ty": 0,
+			"tz": 0,
+			"rx": 0,
+			"ry": 0,
+			"rz": 0,
+			"node": 8,
+			"restraint_code": "FFFFRR"
+		}
+	},
+	"settlements": {},
+	"point_loads": {},
+	"moments": {},
+	"distributed_loads": {
+		"1": {
+			"member": 2,
+			"x_mag_A": 0,
+			"y_mag_A": -1,
+			"z_mag_A": 0,
+			"x_mag_B": 0,
+			"y_mag_B": -1,
+			"z_mag_B": 0,
+			"position_A": 0,
+			"position_B": 100,
+			"load_group": "LG",
+			"axes": "global"
+		},
+		"2": {
+			"member": 4,
+			"x_mag_A": 0,
+			"y_mag_A": -1,
+			"z_mag_A": 0,
+			"x_mag_B": 0,
+			"y_mag_B": -1,
+			"z_mag_B": 0,
+			"position_A": 0,
+			"position_B": 100,
+			"load_group": "LG",
+			"axes": "global"
+		},
+		"3": {
+			"member": 6,
+			"x_mag_A": 0,
+			"y_mag_A": -1,
+			"z_mag_A": 0,
+			"x_mag_B": 0,
+			"y_mag_B": -1,
+			"z_mag_B": 0,
+			"position_A": 0,
+			"position_B": 100,
+			"load_group": "LG",
+			"axes": "global"
+		},
+		"4": {
+			"member": 8,
+			"x_mag_A": 0,
+			"y_mag_A": -1,
+			"z_mag_A": 0,
+			"x_mag_B": 0,
+			"y_mag_B": -1,
+			"z_mag_B": 0,
+			"position_A": 0,
+			"position_B": 100,
+			"load_group": "LG",
+			"axes": "global"
+		}
+	},
+	"pressures": {},
+	"area_loads": {},
+	"member_prestress_loads": {},
+	"self_weight": {},
+	"load_combinations": {},
+	"load_cases": {},
+	"nodal_masses": {},
+	"nodal_masses_conversion_map": {},
+	"spectral_loads": {}
+}
