@@ -1,12 +1,15 @@
 # SkyCiv API v3
 
-This readme is for the SkyCiv Structural Analysis and Design API v3. This API allows structural engineers to develop their own applications and solutions using SkyCiv technology. This includes functionality such as:
+This readme is for the v3 [SkyCiv Structural Analysis and Design API](https://platform.skyciv.com/account/api). This API allows structural engineers to develop their own applications and solutions using SkyCiv technology. This includes functionality such as:
 
 * Auto generation of structural models, saving files in cloud
+* Performing structural analysis (static, static-buckling, non-linear (P-delta), plates, cables, frequency analysis (coming soon)
 * Migrating data between applications (for instance, SkyCiv-Revit Plugin)
 * Running steel members design checks (AISC 360, AS 4100, EN3, CSA S-16)
 * Running timber members design checks (NDS, AS 1720)
-* Performing structural analysis (static, static-buckling, non-linear (P-delta), frequency analysis (coming soon)
+* Calculate wind speeds, topography, wind pressure and snow pressure calcs from ASCE, NBCC, AS1170 and EN1991
+
+[Full Documentation available at https://skyciv.com/api/v3/docs/getting-started/]
 
 SkyCiv API v3 uses the following endpoint for all methods:
 ```
