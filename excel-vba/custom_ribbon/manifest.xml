@@ -1,0 +1,108 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+	<ribbon>
+		<tabs>
+			<tab id="customTab" label="SkyCiv">
+                <group id="SC_account_group" label="Account">
+                    <button id="SC_account_about"
+                        label="About"
+                        screentip="Learn more about this Office Add-in in our documentation"
+                        size="large" 
+                        onAction="ribbon_switch" 
+                        image="about" />
+                    <separator id="SC_account_separator1" />
+                    <button id="SC_account_auth"
+                        label="Username and Key"
+                        screentip="Enter your SkyCiv API username and key"
+                        supertip="In order for the cloud functions to work a valid username and API key must be entered"
+                        size="large" 
+                        onAction="ribbon_switch" 
+                        image="key" />
+                </group>
+                <group id="SC_cloud_group" label="Cloud">
+                    <menu id="SC_cloud_run_analysis" 
+                        label="Run Analysis"
+                        screentip="Choose an analysis method"
+                        supertip="Compiles the current model in the workbook into a SkyCiv API model and sends to the cloud for analysis, returning the results to new sheets for each load combination"
+                        size="large"
+                        image="search" >
+                            <button id="SC_cloud_analysis_linear" label="Linear Static"  onAction="ribbon_switch" />
+                            <button id="SC_cloud_analysis_buckling" label="Linear Static + Buckling"  onAction="ribbon_switch" />
+                            <button id="SC_cloud_analysis_non_linear" label="Non-Linear + Static + P-Delta"  onAction="ribbon_switch" />
+                            <button id="SC_cloud_analysis_dynamic" label="Response Spectrum"  onAction="ribbon_switch" />
+                    </menu>
+                    <separator id="SC_cloud_separator1" />
+                    <menu id="SC_cloud_design"
+                        label="Run Design"
+                        screentip="Choose a steel design code"
+                        supertip="Compiles the current model in the workbook into a SkyCiv API model and sends to the cloud for design, returning the results to a new sheet"
+                        size="large"
+                        image="ok" >
+                            <button id="SC_cloud_design_AISC_360_16_ASD" label="AISC 360-16 ASD"  onAction="ribbon_switch" image="usa"/>
+                            <button id="SC_cloud_design_ASIC_360_16_LFRD" label="AISC 360-16 LFRD"  onAction="ribbon_switch" image="usa" />
+                            <button id="SC_cloud_design_AISC_360_10_ASD" label="AISC 360-10 ASD"  onAction="ribbon_switch" image="usa" />
+                            <button id="SC_cloud_design_AISC_360_10_LFRD" label="AISC 360-10 LFRD"  onAction="ribbon_switch" image="usa" />
+                            <button id="SC_cloud_design_EUROCODE_3_1993_1_1_2005" label="Eurocode 3 (EN 1993-1-1:2005)"  onAction="ribbon_switch" image="flag-of-europe" />
+                            <button id="SC_cloud_design_BS5950_1_2000" label="BS 5950-1:2000"  onAction="ribbon_switch" image="great-britain" />
+                            <button id="SC_cloud_design_AS_4100_1998" label="AS 4100-1998"  onAction="ribbon_switch" image="australia-flag" />
+                            <button id="SC_cloud_design_CSA_S16_14" label="CSA S16-14"  onAction="ribbon_switch" image="canada" />
+                            <menuSeparator id="SC_cloud_design_menu_separator1"/>
+                            <button id="SC_cloud_design_AISI_S100_12_ASD" label="AISI S100-12 ASD"  onAction="ribbon_switch" image="usa" />
+                            <button id="SC_cloud_design_AISI_S100_12_LRFD" label="AISI S100-12 LRFD"  onAction="ribbon_switch" image="usa" />
+                            <button id="SC_cloud_design_AS_4600_2005" label="AS 4600-2005"  onAction="ribbon_switch" image="australia-flag" />
+                            <menuSeparator id="SC_cloud_design_menu_separator2"/>
+                            <button id="SC_cloud_design_NDS_2018_ASD" label="NDS 2018 ASD"  onAction="ribbon_switch" image="usa" />
+                            <button id="SC_cloud_design_NDS_2018_LRFD" label="NDS 2018 LRFD"  onAction="ribbon_switch" image="usa" />
+                    </menu>
+                    <separator id="SC_cloud_separator2" />
+                    <button id="SC_cloud_save" 
+                        label="Save"
+                        screentip="Click to set the model in your cloud storage"
+                        supertip="Uploads your model to your cloud storage according to the filename and path you specify"
+                        size="large" 
+                        onAction="ribbon_switch"
+                        image="upload" />
+                    <separator id="SC_cloud_separator3" />
+                    <button id="SC_cloud_open" 
+                        label="Open"
+                        screentip="Click to open a model from your cloud storage"
+                        supertip="Downloads a file from your cloud storage according to the filename and path you specify"
+                        size="large" 
+                        onAction="ribbon_switch"
+                        image="download" />
+                </group>
+                <group id="SC_local_group" label="Local">
+                    <button id="SC_local_open_on_platform" 
+                        label="Open in S3D" 
+                        screentip="Click to open the model in Structural 3D"
+                        supertip="You can watch a local file for changes so you can edit your model data in Excel but still take advantage of graphics and reporting in the SkyCiv environment" 
+                        size="large" 
+                        onAction="ribbon_switch"
+                        image="skyciv" />
+                    <separator id="SC_local_separator1" />
+                    <button id="SC_local_render" 
+                        label="Render" 
+                        screentip="Click to open the renderer"
+                        supertip="Render the model in 3D, visualise analysis and design results" 
+                        size="large" 
+                        onAction="ribbon_switch"
+                        image="binoculars" />
+                    <separator id="SC_local_separator2" />
+                    <button id="SC_local_sync" 
+                        label="Sync" 
+                        screentip="Click to synchronise changes you've made to the model and the renderer or the SkyCiv environment that is watching (polling). Updates the local data file. To watch the file in Structural 3D begin polling, the data file is automatically saved to the same directory as this workbook"
+                        size="large" 
+                        onAction="ribbon_switch"
+                        image="synchronize" />
+                    <separator id="SC_local_separator3" />
+                    <button id="SC_local_open_data_file" 
+                        label="View Data" 
+                        screentip="Click to open data"
+                        supertip="View model, analysis and design data" 
+                        size="large" 
+                        onAction="ribbon_switch"
+                        image="document" />
+                </group>
+			</tab>
+		</tabs>
+	</ribbon>
+</customUI>
