@@ -1,6 +1,6 @@
 # SkyCiv API v3
 
-This readme is for the v3 [SkyCiv Structural Analysis and Design API](https://platform.skyciv.com/account/api). This API allows structural engineers to develop their own applications and solutions using SkyCiv technology. This includes functionality such as:
+This GitHub includes sample code, helper functions and other resources for the v3 [SkyCiv Structural Analysis and Design API](https://skyciv.com/structural-analysis-design-api/). This API allows structural engineers to develop their own applications and solutions using SkyCiv technology. This includes functionality such as:
 
 * Auto generation of structural models, saving files in cloud
 * Performing structural analysis (static, static-buckling, non-linear (P-delta), plates, cables, frequency analysis (coming soon)
