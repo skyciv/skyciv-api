@@ -19,6 +19,8 @@ https://api.skyciv.com/v3
 You can make a HTTP/HTTPS POST Request to this endpoint manually or you can include/import/require the SkyCiv API file in your project which will do the request for you (typically through the `skyciv.request` method). Currently we have an API module and examples for:
 * JavaScript (browser or node.js compatible)
 * Python
+* C#
+* Excel (VBA)
 
 Eventually we will create an importable file and examples:
 * PHP
