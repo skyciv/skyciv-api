@@ -6,7 +6,7 @@ namespace SkyCiv
 {
     class Program
     {
-        private static string inputFilePath = "full-req.json";
+        private static string inputFilePath = "input-simple-beam.json";
         private static string outputFilePath = "output.json";
 
         static void Main(string[] args)
