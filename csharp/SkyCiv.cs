@@ -1,73 +1,63 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 
 namespace SkyCiv
 {
     public static class SkyCiv
     {
+        private static string _address = "https://api.skyciv.com/v3";
+        private static string _contentType = "application/json";
+        private static string _post = "POST";
+        private static string _errorMessage = "An error occured";
+        
         /// <summary>
-        /// Make a request to the SkyCiv api.
+        /// Make a request to the SkyCiv API
         /// </summary>
         /// <param name="requestBody">Serialized JSON including auth and function data.</param>
-        /// <returns>Response from the SkyCiv API.</returns>
-        public static string Request(string requestBody)
-        {
-            string route = "https://api.skyciv.com/v3";
-            return StandardizeApiRequest("POST", route, requestBody);
-        }
-
-        /// <summary>
-        /// Make a generic post/get request.
-        /// </summary>
-        /// <param name="requestType">Type of request. E.g. "GET" or "POST".</param>
-        /// <param name="url">The full path to the API endpoint.</param>
-        /// <param name="jsonArguments">Request body.</param>
-        /// <returns>Request response.</returns>
-        private static string StandardizeApiRequest(string requestType, string url, string jsonObject)
+        /// <param name="response">The response from the SkyCiv API</param>
+        /// <param name="post">Whether to use POST or GET request type. Default = POST</param>
+        /// <returns>A boolean indicating whether the HTTP request was made and the reply received successfully</returns>
+        public static bool TryRequest(string requestBody, out string response, bool post = true)
         {
             using (var client = new WebClient())
             {
-                client.Headers[HttpRequestHeader.ContentType] = "application/json";
-                return StandardizeApiRequest(client, requestType, url, jsonObject);
+                client.Headers[HttpRequestHeader.ContentType] = _contentType;
+
+                return SafeRequest(client, requestBody, out response, post: post);
             }
         }
 
         /// <summary>
-        /// Make a generic post/get request.
+        /// Make a generic post or get request and catch exceptions
         /// </summary>
         /// <param name="client">Web client object to use for the request.</param>
-        /// <param name="requestType">Type of request. E.g. "GET" or "POST".</param>
-        /// <param name="url">The full path to the API endpoint.</param>
-        /// <param name="jsonArguments">Request body.</param>
-        /// <returns>Request response.</returns>
-        private static dynamic StandardizeApiRequest(WebClient client, string requestType, string url, string jsonArguments)
+        /// <param name="requestBody">HTTP Request body</param>
+        /// <param name="response">The response from the SkyCiv API</param>
+        /// <param name="post">Whether to use POST or GET request type. Default = POST</param>
+        /// <returns>A boolean indicating whether the HTTP request was made and the reply received successfully</returns>
+        private static bool SafeRequest(WebClient client, string requestBody, out string response, bool post = true)
         {
-            var bytes = Encoding.UTF8.GetBytes(jsonArguments);
-            var responseString = "";
-            
             try
             {
-                if (requestType == "POST")
+                // Make a POST request
+                if( post )
                 {
-                    var response = client.UploadData(url, "POST", bytes);
-                    responseString = Encoding.UTF8.GetString(response);
+                    var data = client.UploadData(_address, _post, Encoding.UTF8.GetBytes(requestBody));
+                    response = Encoding.UTF8.GetString(data);
+                    return true;
                 }
-                else if (requestType == "GET")
-                {
-                    responseString = client.DownloadString(url);
-                }
+
+                // Make a GET request
+                response = client.DownloadString(_address);
+                return true;
             }
             catch (Exception e)
             {
-                string errorMsg = "An error occured: " + e.ToString();
-                Console.WriteLine(errorMsg);
-                return errorMsg;
+                response = $"{_errorMessage}: {e.Message}";
+                
+                return false;
             }
-            return responseString;
         }
     }
 }

@@ -1,52 +1,32 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 
 namespace SkyCiv
 {
     class Program
     {
-        
+        private static string inputFilePath = "full-req.json";
+        private static string outputFilePath = "output.json";
+
         static void Main(string[] args)
         {
-            //Load input data.
-            var modelData = LoadJson("full-req.json");
+            // Load the input data (authentication & SkyCiv API commands), from a file
+            var jsonRequestBody = File.ReadAllText(inputFilePath);
 
-            //Call into the SkyCiv API.
-            string response = SkyCiv.Request(modelData);
-            
-            //Beautify json to improve readability in the console.
-            var prettyJson = BeautifyJson(response);
-
-            //Print the json.
-            Console.Write(prettyJson);
-        }
-
-        /// <summary>
-        /// Deserializes and serializes the given json. 
-        /// </summary>
-        /// <param name="jsonContent">The json to prettify.</param>
-        /// <returns>Prettified json.</returns>
-        private static string BeautifyJson(string jsonContent)
-        {
-            var deser = JsonConvert.DeserializeObject(jsonContent);
-            var beautify = JsonConvert.SerializeObject(deser, Formatting.Indented);
-            return beautify;
-        }
-
-        /// <summary>
-        /// Load a json file given its full path.
-        /// </summary>
-        /// <param name="fullPath">Full path to json file to load (including extension.)</param>
-        /// <returns>The content of the json file.</returns>
-        private static string LoadJson(string fullPath)
-        {
-            string json;
-            using (StreamReader r = new StreamReader(fullPath))
+            // Try calling the SkyCiv API
+            if( SkyCiv.TryRequest(jsonRequestBody, out var response, post: true) )
             {
-                json = r.ReadToEnd();
+                // Request succeeded, save the response
+                File.WriteAllText(outputFilePath, response);
+
+                // Notify in the console
+                Console.Write($"The HTTP request to the SkyCiv API was successful - see {outputFilePath} for the JSON response");
             }
-            return json;
+            else
+            {
+                // Request failed, notify in the console (response will be an error message)
+                Console.Write(response);
+            }
         }
     }
 }
