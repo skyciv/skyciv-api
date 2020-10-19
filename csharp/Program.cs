@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 
 namespace SkyCiv
@@ -16,6 +17,8 @@ namespace SkyCiv
             // Try calling the SkyCiv API
             if( SkyCiv.TryRequest(jsonRequestBody, out var response, post: true) )
             {
+                response = BeautifyJson(response);
+
                 // Request succeeded, save the response
                 File.WriteAllText(outputFilePath, response);
 
@@ -28,5 +31,13 @@ namespace SkyCiv
                 Console.Write(response);
             }
         }
+
+        /// <summary>
+        /// Deserializes and serializes the given json. 
+        /// </summary>
+        /// <param name="jsonContent">The json to prettify.</param>
+        /// <returns>Prettified json.</returns>
+        private static string BeautifyJson(string jsonContent) 
+            => JsonConvert.SerializeObject( JsonConvert.DeserializeObject(jsonContent), Formatting.Indented ); 
     }
 }
