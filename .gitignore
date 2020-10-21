@@ -4,3 +4,4 @@ javascript/test/timeout.js
 csharp/bin/
 csharp/obj/
 csharp/.vs/
+*.nupkg

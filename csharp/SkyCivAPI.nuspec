@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>SkyCiv.API</id>
+    <version>0.2.2</version>
+	<title>SkyCiv API</title>
+	<authors>SkyCiv Engineering Team</authors>
+	<description>Access the SkyCiv API from .Net applications</description>
+	<summary>Access the SkyCiv API from .Net applications</summary>
+	<language>English</language>
+	<copyright>SkyCiv Engineering</copyright>
+	<license type="file">license.txt</license>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>https://skyciv.com/api/v3/docs/getting-started/</projectUrl>
+	<contentFiles>
+      <files include="**/*.*" buildAction="None" copyToOutput="true" flatten="true" />
+    </contentFiles>
+    <dependencies>
+      <group targetFramework=".NETCoreApp3.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\netcoreapp3.0\SkyCiv.dll" target="lib\netcoreapp3.0\SkyCiv.dll" />
+	<file src="nuget_license.txt" target="license.txt"/>
+  </files>
+</package>
