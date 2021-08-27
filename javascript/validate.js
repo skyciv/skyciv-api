@@ -2174,7 +2174,7 @@ skyciv.validator = (function () {
 	script.src = "https://cdnjs.cloudflare.com/ajax/libs/ajv/7.0.1/ajv7.min.js";
 	document.head.appendChild(script); //or something of the likes
 
-	functions.model = function (s3d_model, log_flag) {
+	functions.model =  function (s3d_model, log_flag) {
 		if (!log_flag) log_flag = false;
 		return validateModel(s3d_model, log_flag);
 	}
@@ -2719,6 +2719,9 @@ skyciv.validator = (function () {
 	}
 
 	function validateModel(model_data, log_flag) {
+
+		if (!ajv) return console.error("Dependencies have not loaded yet.")
+
 		var validate = ajv.compile(model_schema);
 		var is_valid = validate(model_data);
 		var model_data_str = model_data;
