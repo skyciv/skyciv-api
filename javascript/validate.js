@@ -2722,7 +2722,7 @@ skyciv.validator = (function () {
 		}
 	}
 
-	function validateModel(model_data, log_flag) {
+	async function validateModel(model_data, log_flag) {
 		await ajvLoaded;
 		var validate = ajv.compile(model_schema);
 		var is_valid = validate(model_data);
