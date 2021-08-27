@@ -2161,6 +2161,8 @@ skyciv.validator = (function () {
 	}
 
 	var ajv;
+	var resolveLoaded;
+	var ajvLoaded = new Promise((resolve) => (resolveLoaded = resolve));
 
 	var script = document.createElement('script');
 	script.onload = function () {
@@ -2170,6 +2172,8 @@ skyciv.validator = (function () {
 			allowUnionTypes: true,
 			strict: false
 		})
+
+		resolveLoaded();
 	};
 	script.src = "https://cdnjs.cloudflare.com/ajax/libs/ajv/7.0.1/ajv7.min.js";
 	document.head.appendChild(script); //or something of the likes
@@ -2719,6 +2723,7 @@ skyciv.validator = (function () {
 	}
 
 	function validateModel(model_data, log_flag) {
+		await ajvLoaded;
 		var validate = ajv.compile(model_schema);
 		var is_valid = validate(model_data);
 		var model_data_str = model_data;
