@@ -4,7 +4,7 @@
 
 if (typeof skyciv == "undefined") var skyciv = {};
 
-skyciv.validator = (function () {
+skyciv.validator = function () {
 	var functions = {};
 	var model_schema = {
 		"$comment": "This schema for S3D models generally follows this pattern: $id, title, description, and then any keys evaluated by Ajv (type, required etc.)",
@@ -266,15 +266,15 @@ skyciv.validator = (function () {
 				"properties": {
 					"name": {
 						"type": "string",
-						"pattern": "^(.*)$"
+						"pattern": "^(.+)$"
 					},
 					"designer": {
 						"type": "string",
-						"pattern": "^(.*)$"
+						"pattern": "^(.+)$"
 					},
 					"notes": {
 						"type": "string",
-						"pattern": "^(.*)$"
+						"pattern": "^(.+)$"
 					}
 				}
 			},
@@ -285,7 +285,7 @@ skyciv.validator = (function () {
 				"type": "object",
 				"minProperties": 1,
 				"patternProperties": {
-					"^[1-9][0-9]*$": {
+					"^(.)+$": {
 						"$id": "#/properties/nodes/properties/instance",
 						"type": "object",
 						"title": "The Nodes Instance Schema",
@@ -304,7 +304,8 @@ skyciv.validator = (function () {
 							},
 							"z": {
 								"type": "number"
-							}
+							},
+							"user_data": {}
 						}
 					}
 				},
@@ -316,7 +317,7 @@ skyciv.validator = (function () {
 				"description": "Each member is defined by an object. Members are defined by two nodes, the section, rotation angle, and fixity of the member at each node.",
 				"type": "object",
 				"patternProperties": {
-					"^[1-9][0-9]*$": {
+					"^(.)+$": {
 						"$id": "#/properties/members/properties/1",
 						"type": "object",
 						"title": "The Members Instance Schema",
@@ -375,14 +376,20 @@ skyciv.validator = (function () {
 								"$id": "#/properties/members/properties/instance/properties/node_ID",
 								"title": "The node_A Schema",
 								"description": "The starting node. Identifed by the node ID.",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"node_B": {
 								"$id": "#/properties/members/properties/instance/properties/node_B",
 								"title": "The node_B Schema",
 								"description": "The ending node. Identifed by the node ID.",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"rotation_angle": {
@@ -486,7 +493,8 @@ skyciv.validator = (function () {
 									"string",
 									"null"
 								]
-							}
+							},
+							"user_data": {}
 						},
 						"errorMessage": {
 							"if": "Specfication for members can be found at https://skyciv.com/api/v3/docs/s3d-model/#members"
@@ -501,7 +509,7 @@ skyciv.validator = (function () {
 				"description": "Each plate is defined by an object.",
 				"type": "object",
 				"patternProperties": {
-					"^[1-9][0-9]*$": {
+					"^(.)+$": {
 						"$id": "#/properties/plates/properties/instance",
 						"type": "object",
 						"title": "The Plates Instance Schema",
@@ -526,9 +534,12 @@ skyciv.validator = (function () {
 								"examples": [
 									"4,5,7,6"
 								],
-								"pattern": "^([1-9]{1}[0-9]*,)+[1-9][0-9]*$",
+								"pattern": "^(.)+$",
 								"items": {
-									"type": "integer"
+									"type": [
+										"integer",
+										"string"
+									]
 								},
 								"errorMessage": {
 									"pattern": "should be a comma-seperated list of 4 nodes eg. '1,2,3,4'"
@@ -598,7 +609,7 @@ skyciv.validator = (function () {
 									"null"
 								],
 								"items": {
-									"pattern": "^([0-9]+,){2,}([0-9]+)$",
+									"pattern": "^(.)+$",
 									"errorMessage": {
 										"pattern": "should be a comma-seperated list of nodes eg. '1,2,3,4'"
 									}
@@ -673,7 +684,8 @@ skyciv.validator = (function () {
 										""
 									]
 								}
-							}
+							},
+							"user_data": {}
 						},
 						"$comment": "patternProperties checks for is_meshed or isMeshed key. A proposed change to ajv is 'patternRequired'",
 						"patternProperties": {
@@ -711,35 +723,50 @@ skyciv.validator = (function () {
 								"$id": "#/properties/meshed_plates/properties/instance/properties/node_A",
 								"title": "The node_A Schema",
 								"description": "The first node of the meshed plate. Meshed plates must be quadrilateral elements.",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"node_B": {
 								"$id": "#/properties/meshed_plates/properties/instance/properties/node_B",
 								"title": "The node_B Schema",
 								"description": "The second node of the meshed plate. Meshed plates must be quadrilateral elements.",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"node_C": {
 								"$id": "#/properties/meshed_plates/properties/instance/properties/node_C",
 								"title": "The node_C Schema",
 								"description": "The third node of the meshed plate. Meshed plates must be quadrilateral elements.",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"node_D": {
 								"$id": "#/properties/meshed_plates/properties/instance/properties/node_D",
 								"title": "The node_D Schema",
 								"description": "The fourth node of the meshed plate. Meshed plates must be quadrilateral elements.",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"parent_plate": {
 								"$id": "#/properties/meshed_plates/properties/instance/properties/parent_plate",
 								"title": "The parent_plate Schema",
 								"description": "The id of the plate which the meshed plate originated from.",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"rotZ": {
@@ -760,7 +787,7 @@ skyciv.validator = (function () {
 				"description": "Each material is defined as an object with properties.",
 				"type": "object",
 				"patternProperties": {
-					"^[1-9][0-9]*$": {
+					"^(.)+$": {
 						"$id": "#/properties/materials/properties/instance",
 						"title": "The Materials Instance Schema",
 						"type": "object",
@@ -802,7 +829,8 @@ skyciv.validator = (function () {
 								"description": "Poisson's Ratio, also known as coefficient of expansion.",
 								"type": "number",
 								"exclusiveMinimum": 0
-							}
+							},
+							"user_data": {}
 						}
 					}
 				},
@@ -814,7 +842,7 @@ skyciv.validator = (function () {
 				"description": "Each support is defined by an object with properties. Supports are defined by their node position, restraint code, translational and rotational stiffness.",
 				"type": "object",
 				"patternProperties": {
-					"^[1-9][0-9]*$": {
+					"^(.)+$": {
 						"$id": "#/properties/supports/properties/instance",
 						"title": "The Supports Instance Schema",
 						"type": "object",
@@ -826,7 +854,10 @@ skyciv.validator = (function () {
 							"node": {
 								"$id": "#/properties/supports/properties/instance/properties/node",
 								"title": "The node Schema",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"restraint_code": {
@@ -904,7 +935,8 @@ skyciv.validator = (function () {
 								"errorMessage": {
 									"pattern": "should be a 6 letter code with B, P, or N (Both, Positive, or Negative). eg. 'BBBNPN'"
 								}
-							}
+							},
+							"user_data": {}
 						}
 					}
 				},
@@ -934,7 +966,10 @@ skyciv.validator = (function () {
 								"$id": "#/properties/settlements/properties/instance/properties/node",
 								"title": "The Node Schema",
 								"description": "The node location where the settlement is applied. The value is the node ID.",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"tx": {
@@ -972,7 +1007,8 @@ skyciv.validator = (function () {
 								"title": "The rz Schema",
 								"description": "Rotation of settlement in the z axis.",
 								"type": "number"
-							}
+							},
+							"user_data": {}
 						}
 					}
 				},
@@ -1014,6 +1050,7 @@ skyciv.validator = (function () {
 								"description": "Contextual. Only include the property 'node' if applying the point load to a node. The value should be the node ID.",
 								"type": [
 									"integer",
+									"string",
 									"null"
 								],
 								"minimum": 1
@@ -1024,6 +1061,7 @@ skyciv.validator = (function () {
 								"description": "Contextual. Only include the property 'member'if applying the point load somewhere along a member. The value should be the member ID.",
 								"type": [
 									"integer",
+									"string",
 									"null"
 								],
 								"minimum": 1
@@ -1068,7 +1106,8 @@ skyciv.validator = (function () {
 								"title": "The Load_group Schema",
 								"description": "The load group which the point load is to be grouped to.",
 								"type": "string"
-							}
+							},
+							"user_data": {}
 						}
 					}
 				},
@@ -1105,6 +1144,7 @@ skyciv.validator = (function () {
 								"description": "Contextual. Only include the property 'node' if applying the moment to a node. The value should be the node ID.",
 								"type": [
 									"integer",
+									"string",
 									"null"
 								],
 								"minimum": 1
@@ -1115,6 +1155,7 @@ skyciv.validator = (function () {
 								"description": "Contextual. Only include the property 'member' if applying the moment somewhere along a member. The value should be the member ID.",
 								"type": [
 									"integer",
+									"string",
 									"null"
 								],
 								"minimum": 1
@@ -1158,7 +1199,8 @@ skyciv.validator = (function () {
 								"title": "The Load_group Schema",
 								"description": "The load group which the point load is to be grouped to.",
 								"type": "string"
-							}
+							},
+							"user_data": {}
 						}
 					}
 				},
@@ -1192,7 +1234,10 @@ skyciv.validator = (function () {
 								"$id": "#/properties/distributed_loads/properties/instance/properties/member",
 								"title": "The member Schema",
 								"description": "Member where the distributed load is applied. Identified by the member ID.",
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"x_mag_A": {
@@ -1282,7 +1327,8 @@ skyciv.validator = (function () {
 									"Global",
 									"Local"
 								]
-							}
+							},
+							"user_data": {}
 						}
 					}
 				},
@@ -1327,7 +1373,10 @@ skyciv.validator = (function () {
 									"$id": "#/properties/pressures/properties/instance/properties/p1_point_id",
 									"title": "The p1_point_id Schema",
 									"description": "Node ID of point P1 of linear pressure.",
-									"type": "integer"
+									"type": [
+										"integer",
+										"string"
+									]
 								},
 								"p1_magnitude": {
 									"$id": "#/properties/pressures/properties/instance/properties/p1_magnitude",
@@ -1340,7 +1389,10 @@ skyciv.validator = (function () {
 									"$id": "#/properties/pressures/properties/instance/properties/p2_point_id",
 									"title": "The p2_point_id Schema",
 									"description": "Node ID of point P2 of linear pressure.",
-									"type": "integer"
+									"type": [
+										"integer",
+										"string"
+									]
 								},
 								"p2_magnitude": {
 									"$id": "#/properties/pressures/properties/instance/properties/p2_magnitude",
@@ -1353,7 +1405,10 @@ skyciv.validator = (function () {
 									"$id": "#/properties/pressures/properties/instance/properties/p3_point_id",
 									"title": "The p3_point_id Schema",
 									"description": "Node ID of point P3 of linear pressure.",
-									"type": "integer"
+									"type": [
+										"integer",
+										"string"
+									]
 								},
 								"p3_magnitude": {
 									"$id": "#/properties/pressures/properties/instance/properties/p3_magnitude",
@@ -1374,7 +1429,7 @@ skyciv.validator = (function () {
 									"string"
 								],
 								"minimum": 1,
-								"pattern": "^[1-9]+[0-9]*$"
+								"pattern": "^(.)+$"
 							},
 							"axes": {
 								"$id": "#/properties/pressures/properties/instance/properties/axes",
@@ -1424,7 +1479,8 @@ skyciv.validator = (function () {
 									"uniform",
 									"linear"
 								]
-							}
+							},
+							"user_data": {}
 						}
 					}
 				},
@@ -1436,7 +1492,7 @@ skyciv.validator = (function () {
 				"description": "Each area load is defined by an object with properties.",
 				"type": "object",
 				"patternProperties": {
-					"^[1-9][0-9]*$": {
+					"^(.)+$": {
 						"$id": "#/properties/area_loads/properties/instance",
 						"title": "The Area Load Instance Schema",
 						"type": "object",
@@ -1534,9 +1590,12 @@ skyciv.validator = (function () {
 								"examples": [
 									"4,5,7,6"
 								],
-								"pattern": "^([0-9]+,){2,3}([0-9]+)$",
+								"pattern": "^(.)+$",
 								"items": {
-									"type": "integer"
+									"type": [
+										"integer",
+										"string"
+									]
 								},
 								"errorMessage": {
 									"pattern": "should be a comma-seperated list of 4 nodes eg. '1,2,3,4'"
@@ -1569,9 +1628,12 @@ skyciv.validator = (function () {
 									"array",
 									"null"
 								],
-								"pattern": "[0-9]+,[0-9]+",
+								"pattern": "(.)+",
 								"items": {
-									"type": "integer"
+									"type": [
+										"integer",
+										"string"
+									]
 								},
 								"minItems": 2,
 								"maxItems": 2,
@@ -1596,7 +1658,8 @@ skyciv.validator = (function () {
 										"major"
 									]
 								}
-							}
+							},
+							"user_data": {}
 						},
 						"patternProperties": {
 							"LG|load_group": {
@@ -1636,7 +1699,10 @@ skyciv.validator = (function () {
 							}
 						},
 						"member_id": {
-							"type": "integer",
+							"type": [
+								"integer",
+								"string"
+							],
 							"minimum": 1
 						},
 						"prestress_magnitude": {
@@ -1699,7 +1765,8 @@ skyciv.validator = (function () {
 							"errorMessage": {
 								"pattern": "should follow pattern \"SW\" followed by integer greater than 0 eg: \"SW2\"."
 							}
-						}
+						},
+						"user_data": {}
 					}
 				},
 				"else": {
@@ -1748,7 +1815,8 @@ skyciv.validator = (function () {
 									"errorMessage": {
 										"pattern": "should follow pattern \"SW\" followed by integer greater than 0 eg: \"SW2\"."
 									}
-								}
+								},
+								"user_data": {}
 							}
 						}
 					}
@@ -1769,7 +1837,8 @@ skyciv.validator = (function () {
 								"$id": "#/properties/load_combinations/instance/properties/name",
 								"title": "The Load Combination Name Schema",
 								"type": "string"
-							}
+							},
+							"user_data": {}
 						},
 						"patternProperties": {
 							"^(!name)(.+)$": {
@@ -1919,7 +1988,10 @@ skyciv.validator = (function () {
 						"type": "object",
 						"properties": {
 							"node_id": {
-								"type": "integer",
+								"type": [
+									"integer",
+									"string"
+								],
 								"minimum": 1
 							},
 							"tx_mass": {
@@ -2174,7 +2246,7 @@ skyciv.validator = (function () {
 	script.src = "https://cdnjs.cloudflare.com/ajax/libs/ajv/7.0.1/ajv7.min.js";
 	document.head.appendChild(script); //or something of the likes
 
-	functions.model =  function (s3d_model, log_flag) {
+	functions.model = function (s3d_model, log_flag) {
 		if (!log_flag) log_flag = false;
 		return validateModel(s3d_model, log_flag);
 	}
@@ -2231,7 +2303,8 @@ skyciv.validator = (function () {
 								"pattern": "^(.)+$"
 							}
 						}
-					}
+					},
+					"user_data": {}
 				}
 			}
 
@@ -2470,7 +2543,8 @@ skyciv.validator = (function () {
 								"type": "number"
 							}
 						}
-					}
+					},
+					"user_data": {}
 				}
 			}
 
@@ -2494,7 +2568,9 @@ skyciv.validator = (function () {
 						"$comment": "Array is a list of strings eg. ['American', 'AISC', 'W shapes', 'W14x808']",
 						"items": {
 							"type": "string"
-						}
+						},
+						"minItems": 4,
+						"maxItems": 4,
 					},
 					"material_id": {
 						"$id": "#/properties/sections/properties/instance/type2/material_id",
@@ -2502,7 +2578,8 @@ skyciv.validator = (function () {
 						"description": "The material attached to this particle section.",
 						"type": "integer",
 						"minimum": 1
-					}
+					},
+					"user_data": {}
 				}
 			}
 
@@ -2533,7 +2610,8 @@ skyciv.validator = (function () {
 						"description": "The material attached to this particle section.",
 						"type": "integer",
 						"minimum": 1
-					}
+					},
+					"user_data": {}
 				}
 			}
 
@@ -2564,7 +2642,7 @@ skyciv.validator = (function () {
 					}
 
 					errors.push("If using the \"section builder\" format:");
-					for (e = 0; e < validate_b.errors.length; e++) {
+					for (var e = 0; e < validate_b.errors.length; e++) {
 						if (validate_b.errors[e].dataPath !== "") {
 							validate_b.errors[e].dataPath = "sections[" + s + "]" + validate_b.errors[e].dataPath;
 						} else {
@@ -2574,7 +2652,7 @@ skyciv.validator = (function () {
 					}
 
 					errors.push("If using the \"load_section\" format:");
-					for (e = 0; e < validate_c.errors.length; e++) {
+					for (var e = 0; e < validate_c.errors.length; e++) {
 						if (validate_c.errors[e].dataPath !== "") {
 							validate_c.errors[e].dataPath = "sections[" + s + "]" + validate_c.errors[e].dataPath;
 						} else {
@@ -2584,7 +2662,7 @@ skyciv.validator = (function () {
 					}
 
 					errors.push("If using the \"load_custom\" format:");
-					for (e = 0; e < validate_d.errors.length; e++) {
+					for (var e = 0; e < validate_d.errors.length; e++) {
 						if (validate_d.errors[e].dataPath !== "") {
 							validate_d.errors[e].dataPath = "sections[" + s + "]" + validate_d.errors[e].dataPath;
 						} else {
@@ -2651,19 +2729,19 @@ skyciv.validator = (function () {
 			var keys = [];
 			var malformed_keys = [];
 
-			if (typeof model_data.settings.units === "object") {
-				for (const k in model_data.settings.units) {
+			if (typeof model_data["settings"]["units"] === "object") {
+				for (const k in model_data["settings"]["units"]) {
 
 					if (!units[k]) {
 						return [
 							k + " is not a unit key."
 						];
 					}
-					if (units[k].metric.indexOf(model_data.settings.units[k]) > -1) {
+					if (units[k]["metric"].indexOf(model_data["settings"]["units"][k]) > -1) {
 						metric_count++;
 						keys.push("Metric " + k + " detected.");
 
-					} else if (units[k].imperial.indexOf(model_data.settings.units[k]) > -1) {
+					} else if (units[k]["imperial"].indexOf(model_data["settings"]["units"][k]) > -1) {
 						imperial_count++;
 						keys.push("Imperial " + k + " detected.");
 
@@ -2671,16 +2749,16 @@ skyciv.validator = (function () {
 						var metric_formatted = [];
 						var imperial_formatted = [];
 
-						for (const u in units[k].metric) {
-							metric_formatted.push("\"" + units[k].metric.hasOwnProperty[u] + "\"")
+						for (const u in units[k]["metric"]) {
+							metric_formatted.push("\"" + units[k]["metric"][u] + "\"")
 						}
 
-						for (const u in units[k].imperial) {
-							imperial_formatted.push("\"" + units[k].imperial[u] + "\"")
+						for (const u in units[k]["imperial"]) {
+							imperial_formatted.push("\"" + units[k]["imperial"][u] + "\"")
 						}
 
 						keys.push("settings." + k + " if metric should be: " + metric_formatted.join(" or ") + ". Or if imperial should be: " + imperial_formatted.join(" or "))
-						malformed_keys.push("settings." + k + " (" + model_data.settings.units[k] + ") does not fit either Metric or Imperial specification.")
+						malformed_keys.push("settings." + k + " (" + model_data["settings"]["units"][k] + ") does not fit either Metric or Imperial specification.")
 						outlier_count++;
 					}
 				}
@@ -2719,9 +2797,6 @@ skyciv.validator = (function () {
 	}
 
 	function validateModel(model_data, log_flag) {
-
-		if (!ajv) return console.error("Dependencies have not loaded yet.")
-
 		var validate = ajv.compile(model_schema);
 		var is_valid = validate(model_data);
 		var model_data_str = model_data;
@@ -2942,15 +3017,28 @@ skyciv.validator = (function () {
 				if (sections_result !== true) {
 					// console.log(sections_result);
 					var error_obj = errorResponse(sections_result);
-					// console.log(error_obj.messages);
-					return {
-						"status": false,
-						"messages": error_obj.messages
-					};
+					// console.log(error_obj);
+
+					for (var e = 0; e < error_obj.errors.length; e++) {
+						if (typeof error_obj.errors[e] === "string") {
+							error_obj.errors.splice(e, 1);
+							e--;
+						}
+					}
+
+					// console.log(error_obj);
+					return error_obj;
 				}
 
 				var result = validateModel(model_data); // Array of errors.
+				var other_checks = checkElementsExists(model_data);
+				if (other_checks.length > 0) {
+					result.status = false;
+					result.messages = result.messages.concat(other_checks);
+					result.errors = result.errors.concat(other_checks);
+				}
 
+				console.log(result);
 				if (typeof result !== "undefined") {
 					return result;
 				}
@@ -2964,4 +3052,4 @@ skyciv.validator = (function () {
 	}
 
 	return functions;
-})();
+}();
