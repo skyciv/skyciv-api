@@ -1,11 +1,13 @@
 // If you wish to test in something like jsfiddle, there is a simulated function call at the bottom of this script.
-// skyciv.validator.model({ your_skyciv_model}, log_flag)
+// skyciv.validator.model({ your_skyciv_model }, log_flag)
 // If log_flag is set to true the result of the validation is returned to the console.
 
 if (typeof skyciv == "undefined") var skyciv = {};
 
 skyciv.validator = function () {
 	var functions = {};
+
+	// BEGIN S3D MODEL SCHEMA ==== Do not remove! ============================================================
 	var model_schema = {
 		"$comment": "This schema for S3D models generally follows this pattern: $id, title, description, and then any keys evaluated by Ajv (type, required etc.)",
 		"definitions": {},
@@ -81,6 +83,12 @@ skyciv.validator = function () {
 										"mpa",
 										"ksi",
 										"psi"
+									]
+								},
+								"temperature": {
+									"enum": [
+										"degc",
+										"degf"
 									]
 								},
 								"density": {
@@ -285,7 +293,7 @@ skyciv.validator = function () {
 				"type": "object",
 				"minProperties": 1,
 				"patternProperties": {
-					"^(.)+$": {
+					"^(.+)$": {
 						"$id": "#/properties/nodes/properties/instance",
 						"type": "object",
 						"title": "The Nodes Instance Schema",
@@ -317,7 +325,7 @@ skyciv.validator = function () {
 				"description": "Each member is defined by an object. Members are defined by two nodes, the section, rotation angle, and fixity of the member at each node.",
 				"type": "object",
 				"patternProperties": {
-					"^(.)+$": {
+					"^(.+)$": {
 						"$id": "#/properties/members/properties/1",
 						"type": "object",
 						"title": "The Members Instance Schema",
@@ -509,7 +517,7 @@ skyciv.validator = function () {
 				"description": "Each plate is defined by an object.",
 				"type": "object",
 				"patternProperties": {
-					"^(.)+$": {
+					"^(.+)$": {
 						"$id": "#/properties/plates/properties/instance",
 						"type": "object",
 						"title": "The Plates Instance Schema",
@@ -534,7 +542,7 @@ skyciv.validator = function () {
 								"examples": [
 									"4,5,7,6"
 								],
-								"pattern": "^(.)+$",
+								"pattern": "^(.+)$",
 								"items": {
 									"type": [
 										"integer",
@@ -609,7 +617,7 @@ skyciv.validator = function () {
 									"null"
 								],
 								"items": {
-									"pattern": "^(.)+$",
+									"pattern": "^(.+)$",
 									"errorMessage": {
 										"pattern": "should be a comma-seperated list of nodes eg. '1,2,3,4'"
 									}
@@ -787,7 +795,7 @@ skyciv.validator = function () {
 				"description": "Each material is defined as an object with properties.",
 				"type": "object",
 				"patternProperties": {
-					"^(.)+$": {
+					"^(.+)$": {
 						"$id": "#/properties/materials/properties/instance",
 						"title": "The Materials Instance Schema",
 						"type": "object",
@@ -842,7 +850,7 @@ skyciv.validator = function () {
 				"description": "Each support is defined by an object with properties. Supports are defined by their node position, restraint code, translational and rotational stiffness.",
 				"type": "object",
 				"patternProperties": {
-					"^(.)+$": {
+					"^(.+)$": {
 						"$id": "#/properties/supports/properties/instance",
 						"title": "The Supports Instance Schema",
 						"type": "object",
@@ -1318,13 +1326,15 @@ skyciv.validator = function () {
 							"axes": {
 								"$id": "#/properties/distributed_loads/properties/instance/properties/axes",
 								"title": "The axes Schema",
-								"description": "Specify either 'global' or 'local' to assign which axes are to be used to apply the distributed load.",
+								"description": "Specify either 'global', 'global_projected' or 'local' to assign which axes are to be used to apply the distributed load.",
 								"type": "string",
 								"default": "global",
 								"enum": [
 									"global",
+									"global_projected",
 									"local",
 									"Global",
+									"Global_projected",
 									"Local"
 								]
 							},
@@ -1429,17 +1439,21 @@ skyciv.validator = function () {
 									"string"
 								],
 								"minimum": 1,
-								"pattern": "^(.)+$"
+								"pattern": "^(.+)$"
 							},
 							"axes": {
 								"$id": "#/properties/pressures/properties/instance/properties/axes",
 								"title": "The axes Schema",
-								"description": "Specify either 'global' or 'local' to assign which axes are to be used to apply the pressure load.",
+								"description": "Specify either 'global', 'global_projected' or 'local' to assign which axes are to be used to apply the pressure load.",
 								"type": "string",
 								"default": "global",
 								"enum": [
 									"global",
-									"local"
+									"global_projected",
+									"local",
+									"Global",
+									"Global_projected",
+									"Local"
 								]
 							},
 							"x_mag": {
@@ -1492,7 +1506,7 @@ skyciv.validator = function () {
 				"description": "Each area load is defined by an object with properties.",
 				"type": "object",
 				"patternProperties": {
-					"^(.)+$": {
+					"^(.+)$": {
 						"$id": "#/properties/area_loads/properties/instance",
 						"title": "The Area Load Instance Schema",
 						"type": "object",
@@ -1558,8 +1572,11 @@ skyciv.validator = function () {
 									"then": {
 										"enum": [
 											"X",
+											"X_projected",
 											"Y",
+											"Y_projected",
 											"Z",
+											"Z_projected",
 											"local"
 										]
 									}
@@ -1576,7 +1593,8 @@ skyciv.validator = function () {
 									"one_way",
 									"two_way",
 									"column_wind_load",
-									"open_structure"
+									"open_structure",
+									"non_rectangular"
 								]
 							},
 							"nodes": {
@@ -1590,7 +1608,7 @@ skyciv.validator = function () {
 								"examples": [
 									"4,5,7,6"
 								],
-								"pattern": "^(.)+$",
+								"pattern": "^(.+)$",
 								"items": {
 									"type": [
 										"integer",
@@ -2231,6 +2249,7 @@ skyciv.validator = function () {
 			}
 		}
 	}
+	// END S3D MODEL SCHEMA ==== Do not remove! ==============================================================
 
 	var ajv;
 
@@ -2693,6 +2712,10 @@ skyciv.validator = function () {
 					"metric": ["mpa"],
 					"imperial": ["ksi", "psi"],
 				},
+				"temperature": {
+					"metric": ["degc"],
+					"imperial": ["degf"]
+				},
 				"density": {
 					"metric": ["kg/m3"],
 					"imperial": ["lb/ft3"],
@@ -2881,6 +2904,10 @@ skyciv.validator = function () {
 			"material_strength": {
 				"metric": ["mpa"],
 				"imperial": ["ksi", "psi"],
+			},
+			"temperature": {
+				"metric": ["degc"],
+				"imperial": ["degf"]
 			},
 			"density": {
 				"metric": ["kg/m3"],
