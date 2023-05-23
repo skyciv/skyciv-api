@@ -1,8 +1,8 @@
 # SkyCiv API v3 C# Example
-Simple example of how to call into the SkyCiv API from a console application written in C# targeting dotnet core 3.0.
+Simple example of how to call into the SkyCiv API from a console application written in C# targeting dotnet core 6.0.
 
 ## Prerequisites
-- dotnet 3.0 or Visual Studio 2019
+- dotnet 6.0 or Visual Studio 2022
 
 ## Run 
 - change the _"YOUR_API_USERNAME_HERE"_  and _"YOUR_API_KEY_HERE"_ fields in the `config.json` to your own credentials.
