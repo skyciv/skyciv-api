@@ -226,7 +226,7 @@ namespace SkyCivAPI
 
             request.options.ValidateInput = false;
             SkyCivAPIObject apiObject = new SkyCivAPIObject();
-            request.options.Timeout = 2;
+            request.options.Timeout = 2 * 60 * 1000;
 
             var requestJson = JsonConvert.SerializeObject(request, Formatting.Indented);
             System.IO.File.WriteAllText(@"request.json", requestJson);
@@ -248,7 +248,7 @@ namespace SkyCivAPI
 
             SkyCivRequestObject analysisRequest = new SkyCivRequestObject();
             analysisRequest.Auth = auth;
-
+            analysisRequest.options.ValidateInput = false;
             analysisRequest.Functions.Add(APIConstants.Functions.S3D_SESSION_START, "{ keep_open:true}");
             analysisRequest.Functions.Add(APIConstants.Functions.S3D_MODEL_SET, "{s3d_model:" + jsonModel + "}");
             request.Functions.Add(APIConstants.Functions.S3D_FILE_SAVE, saveArguments);
@@ -273,6 +273,8 @@ namespace SkyCivAPI
 
             SkyCivRequestObject designRequest = new SkyCivRequestObject();
             designRequest.Auth = auth;
+            designRequest.options.ValidateInput = false;
+
             designRequest.Functions.Add(APIConstants.Functions.S3D_SESSION_START, "{ keep_open:true}");
 
             //AISC_360-16_LRFD
