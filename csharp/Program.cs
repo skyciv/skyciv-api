@@ -179,15 +179,21 @@ namespace SkyCivAPI
                         'loaded_members_axis': null,
                         'LG': 'LG'}");
 
+
+
+
+            //For setting the load combinations , we have two options 
+            // Setting the default LCs -  DL1, LL1, SW1 and WIND1 factors .. This can be done by below call
+            model.LoadCombinations.Add("SW1 + LL1", "strength", @"{ 'SW1': 1, 'LL1': 1}");
+            // Adding the custom LCs SW1 + LG1 ( where LG is other than from the default).. This can be done by  
+            APIExtensions.AddCustomLoadCombination(ref model, "SW1 + LG1", "strength", @"{ 'SW1': 1, 'LG1': 1}");
+
             //There are two approaches we can take from hereon.. The `modelObject` can be convereted again back to SkyCivModelObject as
             //shown below and continue setting up the properties 
             //or if we are done with the property setting we can just deserialize the `modelObject`
             //SkyCivModelObject convertedModel = JsonConvert.DeserializeObject<SkyCivModelObject>(modelObject.ToString());
 
-            SkyCivModelObject convertedModel = modelObject.ToObject<SkyCivModelObject>();
-            convertedModel.LoadCombinations.Add("SW1 + LG1", "strength", @"{ 'SW1': 1, 'LG1': 1}");
-
-            var jsonModel = JsonConvert.SerializeObject(convertedModel, Formatting.Indented);
+            var jsonModel = JsonConvert.SerializeObject(model, Formatting.Indented);
             System.IO.File.WriteAllText(@"model.json", jsonModel);
 
             // set up Auth

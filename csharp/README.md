@@ -42,21 +42,22 @@ The recommended use of this package is by using the `SkyCivModelObject()` , `Sky
 ```csharp
 
 ```
-           using Newtonsoft.Json;
-           using Newtonsoft.Json.Linq;
-           using SkyCivAPI.Client;
-           using SkyCivAPI.Constant;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
+    using SkyCivAPI.Client;
+    using SkyCivAPI.Constant;
 
-           using SkyCivAPI.Extensions;
-           using SkyCivAPI.Models;
+    using SkyCivAPI.Extensions;
+    using SkyCivAPI.Models;
 
-        namespace SkyCivAPI
+    namespace SkyCivAPI
+    {
+        public class Program
         {
-            public class Program
-         {
             public static void Main(string[] args)
             {
                 SkyCivModelObject model = new SkyCivModelObject("metric");
+                model.Settings.VerticalAxis = "Z";
 
                 // Nodes
                 model.Nodes.Add(0, 0, 0);
@@ -138,7 +139,7 @@ The recommended use of this package is by using the `SkyCivModelObject()` , `Sky
 
                 // Plates
                 int[] plateNodeArr = new int[] { 5, 4, 3, 2 };
-                model.Plates.Add(plateNodeArr, 12, 1, true);
+                model.Plates.Add(plateNodeArr, 1, 12, true);
 
                 // Sections
                 model.Sections.AddLibrarySection(LibrarySections.Australian_Steel_300_Grade_CHS_Grade_350_101_6x3_2_CHS, 1);
@@ -177,6 +178,8 @@ The recommended use of this package is by using the `SkyCivModelObject()` , `Sky
 
                 // Material
                 model.Materials.Add("Structural Steel", 7850, 210000, 0.29, 300, 440, "steel");// For custom material
+
+
                 model.Materials.Add(DefaultMaterials.STRUCTURAL_STEEL);
 
                 // Supports
@@ -228,23 +231,34 @@ The recommended use of this package is by using the `SkyCivModelObject()` , `Sky
                             'LG': 'LG'}");
 
 
+
                 //There are two approaches we can take from hereon.. The `modelObject` can be convereted again back to SkyCivModelObject as
-                //shown below and continue setting up the properties 
+                //shown below
+
+                //skyCivModelObject = modelObject.ToObject<SkyCivModelObject>();
+                //and continue setting up the properties 
                 //or if we are done with the property setting we can just deserialize the `modelObject`
                 //SkyCivModelObject convertedModel = JsonConvert.DeserializeObject<SkyCivModelObject>(modelObject.ToString());
 
-                SkyCivModelObject convertedModel = modelObject.ToObject<SkyCivModelObject>();
-                convertedModel.LoadCombinations.Add("SW1 + LG1", "strength", @"{ 'SW1': 1, 'LG1': 1}");
+
+                //For setting the load combinations , we have two options 
+                // Setting the default LCs -  DL1, LL1, SW1 and WIND1 factors .. This can be done by below call
+                model.LoadCombinations.Add("SW1 + LL1", "strength", @"{ 'SW1': 1, 'LL1': 1}");
+                // Adding the custom LCs SW1 + LG1 ( where LG is other than from the default).. This can be done by  
+            
+                APIExtensions.AddCustomLoadCombination(ref model, "SW1 + LG1", "strength", @"{ 'SW1': 1, 'LG1': 1}");
 
 
-                var jsonModel = JsonConvert.SerializeObject(convertedModel, Formatting.Indented);
+
+                var jsonModel = JsonConvert.SerializeObject(model, Formatting.Indented);
                 System.IO.File.WriteAllText(@"model.json", jsonModel);
 
                 // set up Auth
+
                 var auth = new Authentication();
                 auth.Source = "API";
-                auth.Username = "YOUR_API_USERNAME_HERE";
-                auth.Key = "YOUR_API_KEY_HERE";
+                auth.Username = "nilay.ram@skyciv.com";
+                auth.Key = "v1tMCV5J4TQ5mEojrSN7N8fWNyRbfeNmwBBuax6JhTdU2udr4I4nhoAIxtMxIgLQ";
 
                 // making a request to start session, set and save model
 
@@ -261,7 +275,7 @@ The recommended use of this package is by using the `SkyCivModelObject()` , `Sky
 
                 request.options.ValidateInput = false;
                 SkyCivAPIObject apiObject = new SkyCivAPIObject();
-                request.options.Timeout = 2;
+                request.options.Timeout = 2 * 60 * 1000;
 
                 var requestJson = JsonConvert.SerializeObject(request, Formatting.Indented);
                 System.IO.File.WriteAllText(@"request.json", requestJson);
@@ -283,7 +297,7 @@ The recommended use of this package is by using the `SkyCivModelObject()` , `Sky
 
                 SkyCivRequestObject analysisRequest = new SkyCivRequestObject();
                 analysisRequest.Auth = auth;
-
+                analysisRequest.options.ValidateInput = false;
                 analysisRequest.Functions.Add(APIConstants.Functions.S3D_SESSION_START, "{ keep_open:true}");
                 analysisRequest.Functions.Add(APIConstants.Functions.S3D_MODEL_SET, "{s3d_model:" + jsonModel + "}");
                 request.Functions.Add(APIConstants.Functions.S3D_FILE_SAVE, saveArguments);
@@ -308,6 +322,7 @@ The recommended use of this package is by using the `SkyCivModelObject()` , `Sky
 
                 SkyCivRequestObject designRequest = new SkyCivRequestObject();
                 designRequest.Auth = auth;
+                designRequest.options.ValidateInput = false;
                 designRequest.Functions.Add(APIConstants.Functions.S3D_SESSION_START, "{ keep_open:true}");
 
                 //AISC_360-16_LRFD
@@ -337,3 +352,4 @@ The recommended use of this package is by using the `SkyCivModelObject()` , `Sky
             }
         }
     }
+
