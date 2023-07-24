@@ -2,13 +2,10 @@
 using Newtonsoft.Json.Linq;
 using SkyCivAPI.Client;
 using SkyCivAPI.Constant;
-
 using SkyCivAPI.Extensions;
 using SkyCivAPI.Models;
-using System.Collections.Generic;
 using System;
-using System.IO;
-using File = System.IO.File;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SkyCivAPI
@@ -138,8 +135,6 @@ namespace SkyCivAPI
 
             // Material
             model.Materials.Add("Structural Steel", 7850, 210000, 0.29, 300, 440, "steel");// For custom material
-
-
             model.Materials.Add(DefaultMaterials.STRUCTURAL_STEEL);
 
             // Supports
@@ -159,10 +154,6 @@ namespace SkyCivAPI
             // Add distributed load
             model.DistributedLoads.Add(32, y_mag_A: -10, y_mag_B: -2, position_B: 100, load_group: "LG1");
 
-
-
-
-
             // Pressure
             model.PlatePressures.Add(1, "global", 0, 0, 0.1, "LG1");
 
@@ -174,8 +165,6 @@ namespace SkyCivAPI
             //Once the dynamic property is set, we should pass the model object for further processing. 
 
             //Add Area Load 
-
-
             JObject modelObject = JObject.FromObject(model);
             modelObject["area_loads"] = new JObject();
             modelObject["area_loads"]["1"] = (JToken)Newtonsoft.Json.JsonConvert.DeserializeObject(/*lang=json*/ @"{'type': 'one_way',
@@ -190,7 +179,6 @@ namespace SkyCivAPI
                         'loaded_members_axis': null,
                         'LG': 'LG'}");
 
-
             //There are two approaches we can take from hereon.. The `modelObject` can be convereted again back to SkyCivModelObject as
             //shown below and continue setting up the properties 
             //or if we are done with the property setting we can just deserialize the `modelObject`
@@ -199,17 +187,16 @@ namespace SkyCivAPI
             SkyCivModelObject convertedModel = modelObject.ToObject<SkyCivModelObject>();
             convertedModel.LoadCombinations.Add("SW1 + LG1", "strength", @"{ 'SW1': 1, 'LG1': 1}");
 
-
             var jsonModel = JsonConvert.SerializeObject(convertedModel, Formatting.Indented);
             System.IO.File.WriteAllText(@"model.json", jsonModel);
 
             // set up Auth
             var auth = new Authentication();
 
-            var jsonConfig = JsonConvert.DeserializeObject<dynamic>(File.ReadAllText("config.json"));
+            var jsonConfig = JsonConvert.DeserializeObject<dynamic>(System.IO.File.ReadAllText("config.json"));
             auth.Source = "API";
             auth.Username = jsonConfig["username"].Value;
-            auth.Key = jsonConfig["token_ID"].Value;
+            auth.Key = jsonConfig["key"].Value;
 
             // making a request to start session, set and save model
 
@@ -294,7 +281,6 @@ namespace SkyCivAPI
             var designResponseObj = designResponse.RespJsonObject["functions"].First(f => f["function"].ToString() == APIConstants.Functions.S3D_MEMBER_DESIGN_CHECK); // find the save function by name
             var designMsg = designResponseObj["msg"].ToString();
             Console.WriteLine(designMsg);
-
 
             var designResponseJson = JsonConvert.SerializeObject(designResponse.RespJsonObject, Formatting.Indented);
             System.IO.File.WriteAllText(@"designResponse.json", designResponseJson);
