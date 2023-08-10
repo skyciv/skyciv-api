@@ -182,16 +182,30 @@ namespace SkyCivAPI
 
 
 
+            //There are two approaches we can take from hereon.. The `modelObject` can be convereted again back to SkyCivModelObject as
+            //shown below
+
+            //skyCivModelObject = modelObject.ToObject<SkyCivModelObject>();
+            //and continue setting up the properties 
+            //or if we are done with the property setting we can just deserialize the `modelObject`
+            //SkyCivModelObject convertedModel = JsonConvert.DeserializeObject<SkyCivModelObject>(modelObject.ToString());
+
+
             //For setting the load combinations , we have two options 
             // Setting the default LCs -  DL1, LL1, SW1 and WIND1 factors .. This can be done by below call
             model.LoadCombinations.Add("SW1 + LL1", "strength", @"{ 'SW1': 1, 'LL1': 1}");
             // Adding the custom LCs SW1 + LG1 ( where LG is other than from the default).. This can be done by  
+            //passing the load combo factor as a string 
             APIExtensions.AddCustomLoadCombination(ref model, "SW1 + LG1", "strength", @"{ 'SW1': 1, 'LG1': 1}");
 
-            //There are two approaches we can take from hereon.. The `modelObject` can be convereted again back to SkyCivModelObject as
-            //shown below and continue setting up the properties 
-            //or if we are done with the property setting we can just deserialize the `modelObject`
-            //SkyCivModelObject convertedModel = JsonConvert.DeserializeObject<SkyCivModelObject>(modelObject.ToString());
+            //or load combo can also be added by directly passing the dictionary 
+            Dictionary<string, double> load_combo_dict = new Dictionary<string, double>();
+            load_combo_dict.Add("SW2", 1);
+            load_combo_dict.Add("LG2", 1.5);
+
+            APIExtensions.AddCustomLoadCombination(ref model, "SW2 + LG2", "strength", load_combo_dict);
+
+
 
             var jsonModel = JsonConvert.SerializeObject(model, Formatting.Indented);
             System.IO.File.WriteAllText(@"model.json", jsonModel);
