@@ -37,7 +37,7 @@
 		if (!options) options = {};
 
 		if (!options.version) options.version = current_API_version_endpoint;
-		if (!options.http_or_https) options.http_or_https = "https";
+		if (options.http_or_https != "http" && options.http_or_https != "https") options.http_or_https = "https"; // default to HTTPS
 
 		if (typeof data === "object") {
 			data = JSON.stringify(data);
@@ -136,6 +136,8 @@
 			} else {
 				req_port = ":8086"; // 80;
 			}
+
+			if (options.dont_use_ports_in_endpoint_URL) req_port = "";
 
 			//req.timeout = timeout;
 			req.open("POST", options.http_or_https + "://api.skyciv.com" + req_port + "/v" + options.version, true); // true=async
