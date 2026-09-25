@@ -32,7 +32,7 @@ skyciv.validator = function () {
 					"units": {
 						"$id": "#/properties/settings/properties/units",
 						"title": "The units Schema",
-						"description": "Structure the data to pass 'oneOf' the schemas below.",
+						"description": "Structure the data to pass one of the schemas below.",
 						"if": {
 							"$id": "#/properties/settings/properties/units/implicit",
 							"title": "The Implicit units Schema",
@@ -149,9 +149,6 @@ skyciv.validator = function () {
 										"psi"
 									]
 								}
-							},
-							"errorMessage": {
-								"oneOf": "Please follow one specification for units. Refer to https://skyciv.com/api/v3/docs/s3d-model/#settings"
 							}
 						},
 						"errorMessage": {
@@ -264,6 +261,149 @@ skyciv.validator = function () {
 						"description": "Enable this if your model has stability issues, especially if the non-linear analysis will not converge. The solver will attempt to automatically stabilize nodes that are not restrained. Recommended to leave this disabled unless you are having issues with stability.",
 						"type": "boolean",
 						"default": false
+					},
+					"apply_evaluation_points_to_continuous_member_spans": {
+						"$id": "#/properties/settings/properties/apply_evaluation_points_to_continuous_member_spans",
+						"title": "The apply_evaluation_points_to_continuous_member_spans Schema",
+						"description": "If enabled, the evaluation_points setting is applied across each full continuous member span rather than per individual member segment.",
+						"type": "boolean"
+					},
+					"continuous_member_node_detection_tolerance": {
+						"$id": "#/properties/settings/properties/continuous_member_node_detection_tolerance",
+						"title": "The continuous_member_node_detection_tolerance Schema",
+						"description": "The tolerance used to detect intermediate nodes along a continuous member span.",
+						"type": [
+							"number",
+							"string"
+						]
+					},
+					"member_offsets_axis": {
+						"$id": "#/properties/settings/properties/member_offsets_axis",
+						"title": "The member_offsets_axis Schema",
+						"description": "Sets whether member offsets are applied along the local or global axis.",
+						"type": "string",
+						"enum": [
+							"local",
+							"global"
+						]
+					},
+					"linear_equation_solver": {
+						"$id": "#/properties/settings/properties/linear_equation_solver",
+						"title": "The linear_equation_solver Schema",
+						"description": "Selects the linear equation solver used by the analysis engine.",
+						"type": "string",
+						"examples": [
+							"direct_1"
+						]
+					},
+					"smooth_plate_nodal_results": {
+						"$id": "#/properties/settings/properties/smooth_plate_nodal_results",
+						"title": "The smooth_plate_nodal_results Schema",
+						"description": "If enabled, plate nodal results are smoothed/averaged across adjacent plates.",
+						"type": "boolean"
+					},
+					"extrapolate_plate_results_from_gauss_points": {
+						"$id": "#/properties/settings/properties/extrapolate_plate_results_from_gauss_points",
+						"title": "The extrapolate_plate_results_from_gauss_points Schema",
+						"description": "If enabled, plate results are extrapolated from the internal Gauss integration points rather than computed directly at the nodes.",
+						"type": "boolean"
+					},
+					"calculate_shear_properties_of_wood_concrete_sections": {
+						"$id": "#/properties/settings/properties/calculate_shear_properties_of_wood_concrete_sections",
+						"title": "The calculate_shear_properties_of_wood_concrete_sections Schema",
+						"description": "If enabled, shear properties are calculated for wood and concrete sections.",
+						"type": "boolean"
+					},
+					"only_solve_user_defined_load_combinations": {
+						"$id": "#/properties/settings/properties/only_solve_user_defined_load_combinations",
+						"title": "The only_solve_user_defined_load_combinations Schema",
+						"description": "If enabled, only user-defined load combinations are solved, skipping any auto-generated combinations.",
+						"type": "boolean"
+					},
+					"include_rigid_links_for_area_loads": {
+						"$id": "#/properties/settings/properties/include_rigid_links_for_area_loads",
+						"title": "The include_rigid_links_for_area_loads Schema",
+						"description": "If enabled, rigid links are generated to distribute area loads to supporting members.",
+						"type": "boolean"
+					},
+					"include_inner_members_for_two_way_area_loads": {
+						"$id": "#/properties/settings/properties/include_inner_members_for_two_way_area_loads",
+						"title": "The include_inner_members_for_two_way_area_loads Schema",
+						"description": "If enabled, members internal to a two-way area load's boundary are included when distributing the load.",
+						"type": "boolean"
+					},
+					"dynamic_modes": {
+						"$id": "#/properties/settings/properties/dynamic_modes",
+						"title": "The dynamic_modes Schema",
+						"description": "The number of dynamic modes to calculate for frequency/response spectrum analysis.",
+						"type": [
+							"integer",
+							"string"
+						]
+					},
+					"dynamic_frequency_area_reduction_factor": {
+						"$id": "#/properties/settings/properties/dynamic_frequency_area_reduction_factor",
+						"title": "The dynamic_frequency_area_reduction_factor Schema",
+						"description": "The reduction factor applied to area loads when computing dynamic frequency/mass.",
+						"type": [
+							"number",
+							"string"
+						]
+					},
+					"dynamic_frequency_vertical_cutoff": {
+						"$id": "#/properties/settings/properties/dynamic_frequency_vertical_cutoff",
+						"title": "The dynamic_frequency_vertical_cutoff Schema",
+						"description": "The vertical frequency cutoff used during dynamic frequency analysis.",
+						"type": [
+							"number",
+							"string"
+						]
+					},
+					"envelope_alternate_method": {
+						"$id": "#/properties/settings/properties/envelope_alternate_method",
+						"title": "The envelope_alternate_method Schema",
+						"description": "If enabled, an alternate method is used to compute envelope results.",
+						"type": "boolean"
+					},
+					"thumbnail": {
+						"$id": "#/properties/settings/properties/thumbnail",
+						"title": "The thumbnail Schema",
+						"description": "Thumbnail image metadata for the model.",
+						"type": "object"
+					},
+					"analysis_types": {
+						"$id": "#/properties/settings/properties/analysis_types",
+						"title": "The analysis_types Schema",
+						"description": "Flags indicating which analysis types are enabled for this model.",
+						"type": "object",
+						"properties": {
+							"linear_static": {
+								"type": "boolean",
+								"description": "Enables linear static analysis."
+							},
+							"linear_buckling": {
+								"type": "boolean",
+								"description": "Enables linear buckling analysis."
+							},
+							"non_linear_static": {
+								"type": "boolean",
+								"description": "Enables non-linear static analysis."
+							},
+							"dynamic_frequency": {
+								"type": "boolean",
+								"description": "Enables dynamic frequency analysis."
+							},
+							"response_spectrum": {
+								"type": "boolean",
+								"description": "Enables response spectrum analysis."
+							}
+						}
+					},
+					"visibility": {
+						"$id": "#/properties/settings/properties/visibility",
+						"title": "The visibility Schema",
+						"description": "UI display-flags bag controlling visibility of various model entities and overlays.",
+						"type": "object"
 					}
 				}
 			},
@@ -282,7 +422,7 @@ skyciv.validator = function () {
 					},
 					"notes": {
 						"type": "string",
-						"pattern": "^(.+)$"
+						"pattern": "^([\\s\\S]+)$"
 					}
 				}
 			},
@@ -502,7 +642,53 @@ skyciv.validator = function () {
 									"null"
 								]
 							},
-							"user_data": {}
+							"user_data": {},
+							"disable_non_linear_effects": {
+								"$id": "#/properties/members/properties/instance/properties/disable_non_linear_effects",
+								"title": "The disable_non_linear_effects Schema",
+								"description": "If 'yes', disables non-linear effects (e.g. P-Delta) for this member even if enabled globally.",
+								"type": "string",
+								"enum": [
+									"yes",
+									"no"
+								]
+							},
+							"stiffness_A_Ry": {
+								"$id": "#/properties/members/properties/instance/properties/stiffness_A_Ry",
+								"title": "The stiffness_A_Ry Schema",
+								"description": "Rotational release stiffness (partial fixity) about the local y axis at node A. Only applies where the corresponding fixity code character is 'S' (spring/semi-rigid) rather than F or R. Enter the actual stiffness (number > 0) or a percentage string between '0%' and '100%'.",
+								"type": [
+									"number",
+									"string"
+								]
+							},
+							"stiffness_A_Rz": {
+								"$id": "#/properties/members/properties/instance/properties/stiffness_A_Rz",
+								"title": "The stiffness_A_Rz Schema",
+								"description": "Rotational release stiffness (partial fixity) about the local z axis at node A. Only applies where the corresponding fixity code character is 'S' (spring/semi-rigid) rather than F or R. Enter the actual stiffness (number > 0) or a percentage string between '0%' and '100%'.",
+								"type": [
+									"number",
+									"string"
+								]
+							},
+							"stiffness_B_Ry": {
+								"$id": "#/properties/members/properties/instance/properties/stiffness_B_Ry",
+								"title": "The stiffness_B_Ry Schema",
+								"description": "Rotational release stiffness (partial fixity) about the local y axis at node B. Only applies where the corresponding fixity code character is 'S' (spring/semi-rigid) rather than F or R. Enter the actual stiffness (number > 0) or a percentage string between '0%' and '100%'.",
+								"type": [
+									"number",
+									"string"
+								]
+							},
+							"stiffness_B_Rz": {
+								"$id": "#/properties/members/properties/instance/properties/stiffness_B_Rz",
+								"title": "The stiffness_B_Rz Schema",
+								"description": "Rotational release stiffness (partial fixity) about the local z axis at node B. Only applies where the corresponding fixity code character is 'S' (spring/semi-rigid) rather than F or R. Enter the actual stiffness (number > 0) or a percentage string between '0%' and '100%'.",
+								"type": [
+									"number",
+									"string"
+								]
+							}
 						},
 						"errorMessage": {
 							"if": "Specfication for members can be found at https://skyciv.com/api/v3/docs/s3d-model/#members"
@@ -693,7 +879,31 @@ skyciv.validator = function () {
 									]
 								}
 							},
-							"user_data": {}
+							"user_data": {},
+							"drilling_stiffness_factor": {
+								"$id": "#/properties/plates/properties/instance/properties/drilling_stiffness_factor",
+								"title": "The drilling_stiffness_factor Schema",
+								"description": "Factor applied to the plate's drilling (rotational) stiffness about its normal axis.",
+								"type": "number"
+							},
+							"diaphragm_internal_nodes": {
+								"$id": "#/properties/plates/properties/instance/properties/diaphragm_internal_nodes",
+								"title": "The diaphragm_internal_nodes Schema",
+								"description": "Internal node IDs included in a rigid diaphragm for this plate; null if not applicable.",
+								"type": [
+									"array",
+									"null"
+								]
+							},
+							"diaphragm_fixity": {
+								"$id": "#/properties/plates/properties/instance/properties/diaphragm_fixity",
+								"title": "The diaphragm_fixity Schema",
+								"description": "Fixity/restraint applied to the diaphragm; null if not applicable.",
+								"type": [
+									"string",
+									"null"
+								]
+							}
 						},
 						"$comment": "patternProperties checks for is_meshed or isMeshed key. A proposed change to ajv is 'patternRequired'",
 						"patternProperties": {
@@ -838,7 +1048,126 @@ skyciv.validator = function () {
 								"type": "number",
 								"exclusiveMinimum": 0
 							},
-							"user_data": {}
+							"user_data": {},
+							"id": {
+								"$id": "#/properties/materials/properties/instance/properties/id",
+								"title": "The id Schema",
+								"description": "The material's ID.",
+								"type": "integer",
+								"minimum": 1
+							},
+							"class": {
+								"$id": "#/properties/materials/properties/instance/properties/class",
+								"title": "The class Schema",
+								"description": "The material class/category, affects available design checks.",
+								"type": "string",
+								"enum": [
+									"steel",
+									"aluminium",
+									"concrete",
+									"wood",
+									"masonry",
+									"other"
+								]
+							},
+							"yield_strength": {
+								"$id": "#/properties/materials/properties/instance/properties/yield_strength",
+								"title": "The yield_strength Schema",
+								"description": "Yield strength",
+								"type": [
+									"number",
+									"null"
+								],
+								"minimum": 0
+							},
+							"ultimate_strength": {
+								"$id": "#/properties/materials/properties/instance/properties/ultimate_strength",
+								"title": "The ultimate_strength Schema",
+								"description": "Ultimate strength",
+								"type": [
+									"number",
+									"null"
+								],
+								"minimum": 0
+							},
+							"thermal_expansion_coefficient": {
+								"$id": "#/properties/materials/properties/instance/properties/thermal_expansion_coefficient",
+								"title": "The thermal_expansion_coefficient Schema",
+								"description": "The coefficient of thermal expansion of the material.",
+								"type": [
+									"number",
+									"null"
+								]
+							},
+							"shear_modulus": {
+								"$id": "#/properties/materials/properties/instance/properties/shear_modulus",
+								"title": "The shear_modulus Schema",
+								"description": "Shear modulus of the material.",
+								"type": [
+									"number",
+									"null"
+								],
+								"exclusiveMinimum": 0
+							},
+							"elasticity_modulus_x": {
+								"$id": "#/properties/materials/properties/instance/properties/elasticity_modulus_x",
+								"title": "The elasticity_modulus_x Schema",
+								"description": "Orthotropic modulus of elasticity in the material's local x direction.",
+								"type": [
+									"number",
+									"null"
+								],
+								"exclusiveMinimum": 0
+							},
+							"elasticity_modulus_y": {
+								"$id": "#/properties/materials/properties/instance/properties/elasticity_modulus_y",
+								"title": "The elasticity_modulus_y Schema",
+								"description": "Orthotropic modulus of elasticity in the material's local y direction.",
+								"type": [
+									"number",
+									"null"
+								],
+								"exclusiveMinimum": 0
+							},
+							"shear_modulus_xy": {
+								"$id": "#/properties/materials/properties/instance/properties/shear_modulus_xy",
+								"title": "The shear_modulus_xy Schema",
+								"description": "Orthotropic shear modulus in the xy plane.",
+								"type": [
+									"number",
+									"null"
+								],
+								"exclusiveMinimum": 0
+							},
+							"shear_modulus_xz": {
+								"$id": "#/properties/materials/properties/instance/properties/shear_modulus_xz",
+								"title": "The shear_modulus_xz Schema",
+								"description": "Orthotropic shear modulus in the xz plane.",
+								"type": [
+									"number",
+									"null"
+								],
+								"exclusiveMinimum": 0
+							},
+							"shear_modulus_yz": {
+								"$id": "#/properties/materials/properties/instance/properties/shear_modulus_yz",
+								"title": "The shear_modulus_yz Schema",
+								"description": "Orthotropic shear modulus in the yz plane.",
+								"type": [
+									"number",
+									"null"
+								],
+								"exclusiveMinimum": 0
+							},
+							"poissons_ratio_xy": {
+								"$id": "#/properties/materials/properties/instance/properties/poissons_ratio_xy",
+								"title": "The poissons_ratio_xy Schema",
+								"description": "Orthotropic Poisson's ratio in the xy plane.",
+								"type": [
+									"number",
+									"null"
+								]
+							}
 						}
 					}
 				},
@@ -847,17 +1176,13 @@ skyciv.validator = function () {
 			"supports": {
 				"$id": "#/properties/supports",
 				"title": "The supports Schema",
-				"description": "Each support is defined by an object with properties. Supports are defined by their node position, restraint code, translational and rotational stiffness.",
+				"description": "Each support is defined by an object with properties. Supports are defined by their node position (or, for a line support, a set of nodes via 'nodes'), restraint code, translational and rotational stiffness.",
 				"type": "object",
 				"patternProperties": {
 					"^(.+)$": {
 						"$id": "#/properties/supports/properties/instance",
 						"title": "The Supports Instance Schema",
 						"type": "object",
-						"required": [
-							"node",
-							"restraint_code"
-						],
 						"properties": {
 							"node": {
 								"$id": "#/properties/supports/properties/instance/properties/node",
@@ -944,7 +1269,175 @@ skyciv.validator = function () {
 									"pattern": "should be a 6 letter code with B, P, or N (Both, Positive, or Negative). eg. 'BBBNPN'"
 								}
 							},
-							"user_data": {}
+							"user_data": {},
+							"type": {
+								"$id": "#/properties/supports/properties/instance/properties/type",
+								"title": "The type Schema",
+								"description": "'node' = support applied to a single node (default). 'line' = support applied along a line connecting multiple nodes.",
+								"type": "string",
+								"enum": [
+									"node",
+									"line"
+								],
+								"default": "node"
+							},
+							"nodes": {
+								"$id": "#/properties/supports/properties/instance/properties/nodes",
+								"title": "The nodes Schema",
+								"description": "Comma-separated list of node IDs the line support runs through. Only used when type is 'line'.",
+								"type": [
+									"array",
+									"string"
+								],
+								"examples": [
+									"4,5,7,6"
+								],
+								"pattern": "^(.+)$"
+							},
+							"non_linear_spring_stiffness": {
+								"$id": "#/properties/supports/properties/instance/properties/non_linear_spring_stiffness",
+								"title": "The non_linear_spring_stiffness Schema",
+								"description": "Optional non-linear spring stiffness definitions for spring-supported ('S') translational/rotational directions. Each key (tx/ty/tz/rx/ry/rz) defines how that direction's spring stiffness varies depending on another response quantity (e.g. a reaction or displacement).",
+								"type": "object",
+								"properties": {
+									"tx": {
+										"type": "object",
+										"required": ["stiffness_dependency", "relationship"],
+										"properties": {
+											"stiffness_dependency": { "type": "string", "description": "The quantity that this direction's stiffness depends on, e.g. 'reaction_fx', 'reaction_mx', 'displacement_rx'." },
+											"relationship": {
+												"type": "object",
+												"required": ["symmetric", "values"],
+												"properties": {
+													"symmetric": { "type": "boolean", "description": "If true, the relationship is mirrored for negative values of the dependency." },
+													"values": {
+														"type": "array",
+														"description": "An array of [dependency_value, stiffness_value] pairs defining a piecewise stiffness curve.",
+														"items": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+													}
+												}
+											}
+										}
+									},
+									"ty": {
+										"type": "object",
+										"required": ["stiffness_dependency", "relationship"],
+										"properties": {
+											"stiffness_dependency": { "type": "string", "description": "The quantity that this direction's stiffness depends on, e.g. 'reaction_fx', 'reaction_mx', 'displacement_rx'." },
+											"relationship": {
+												"type": "object",
+												"required": ["symmetric", "values"],
+												"properties": {
+													"symmetric": { "type": "boolean", "description": "If true, the relationship is mirrored for negative values of the dependency." },
+													"values": {
+														"type": "array",
+														"description": "An array of [dependency_value, stiffness_value] pairs defining a piecewise stiffness curve.",
+														"items": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+													}
+												}
+											}
+										}
+									},
+									"tz": {
+										"type": "object",
+										"required": ["stiffness_dependency", "relationship"],
+										"properties": {
+											"stiffness_dependency": { "type": "string", "description": "The quantity that this direction's stiffness depends on, e.g. 'reaction_fx', 'reaction_mx', 'displacement_rx'." },
+											"relationship": {
+												"type": "object",
+												"required": ["symmetric", "values"],
+												"properties": {
+													"symmetric": { "type": "boolean", "description": "If true, the relationship is mirrored for negative values of the dependency." },
+													"values": {
+														"type": "array",
+														"description": "An array of [dependency_value, stiffness_value] pairs defining a piecewise stiffness curve.",
+														"items": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+													}
+												}
+											}
+										}
+									},
+									"rx": {
+										"type": "object",
+										"required": ["stiffness_dependency", "relationship"],
+										"properties": {
+											"stiffness_dependency": { "type": "string", "description": "The quantity that this direction's stiffness depends on, e.g. 'reaction_fx', 'reaction_mx', 'displacement_rx'." },
+											"relationship": {
+												"type": "object",
+												"required": ["symmetric", "values"],
+												"properties": {
+													"symmetric": { "type": "boolean", "description": "If true, the relationship is mirrored for negative values of the dependency." },
+													"values": {
+														"type": "array",
+														"description": "An array of [dependency_value, stiffness_value] pairs defining a piecewise stiffness curve.",
+														"items": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+													}
+												}
+											}
+										}
+									},
+									"ry": {
+										"type": "object",
+										"required": ["stiffness_dependency", "relationship"],
+										"properties": {
+											"stiffness_dependency": { "type": "string", "description": "The quantity that this direction's stiffness depends on, e.g. 'reaction_fx', 'reaction_mx', 'displacement_rx'." },
+											"relationship": {
+												"type": "object",
+												"required": ["symmetric", "values"],
+												"properties": {
+													"symmetric": { "type": "boolean", "description": "If true, the relationship is mirrored for negative values of the dependency." },
+													"values": {
+														"type": "array",
+														"description": "An array of [dependency_value, stiffness_value] pairs defining a piecewise stiffness curve.",
+														"items": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+													}
+												}
+											}
+										}
+									},
+									"rz": {
+										"type": "object",
+										"required": ["stiffness_dependency", "relationship"],
+										"properties": {
+											"stiffness_dependency": { "type": "string", "description": "The quantity that this direction's stiffness depends on, e.g. 'reaction_fx', 'reaction_mx', 'displacement_rx'." },
+											"relationship": {
+												"type": "object",
+												"required": ["symmetric", "values"],
+												"properties": {
+													"symmetric": { "type": "boolean", "description": "If true, the relationship is mirrored for negative values of the dependency." },
+													"values": {
+														"type": "array",
+														"description": "An array of [dependency_value, stiffness_value] pairs defining a piecewise stiffness curve.",
+														"items": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } }
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"if": {
+							"properties": {
+								"type": {
+									"const": "line"
+								}
+							},
+							"required": [
+								"type"
+							]
+						},
+						"then": {
+							"required": [
+								"nodes",
+								"restraint_code"
+							]
+						},
+						"else": {
+							"required": [
+								"node",
+								"restraint_code"
+							]
 						}
 					}
 				},
@@ -1536,7 +2029,7 @@ skyciv.validator = function () {
 										"type": "string"
 									},
 									"then": {
-										"pattern": "([-]?[0-9]*[.]?[0-9]*[,])*([-]?[0-9]*[.]?[0-9])",
+										"pattern": "^-?(\\d+(\\.\\d+)?|\\.\\d+)(,-?(\\d+(\\.\\d+)?|\\.\\d+))*$",
 										"errorMessage": {
 											"pattern": "should be number or a comma-seperated list of numbers eg. '1.2' or '0.2,0.5'"
 										}
@@ -1594,7 +2087,8 @@ skyciv.validator = function () {
 									"two_way",
 									"column_wind_load",
 									"open_structure",
-									"non_rectangular"
+									"non_rectangular",
+									"general_one_way"
 								]
 							},
 							"nodes": {
@@ -1629,7 +2123,7 @@ skyciv.validator = function () {
 									"array",
 									"null"
 								],
-								"pattern": "^(([0-9]+,)|([0-9]+[.]?[0-9]*,)|([0-9]*[.]?[0-9]+,))*(([0-9]+$)|([0-9]+[.]?[0-9]*$)|([0-9]*[.]?[0-9]+$))",
+								"pattern": "^(\\d+(\\.\\d+)?|\\.\\d+)(,(\\d+(\\.\\d+)?|\\.\\d+))*$",
 								"items": {
 									"type": "number"
 								},
@@ -1677,7 +2171,134 @@ skyciv.validator = function () {
 									]
 								}
 							},
-							"user_data": {}
+							"user_data": {},
+							"intervals": {
+								"$id": "#/properties/area_loads/properties/instance/properties/intervals",
+								"title": "The intervals Schema",
+								"description": "general_one_way only. Comma-separated step-interval distances, n + 1 values matching n values in mags. Blank = uniform load.",
+								"type": [
+									"string",
+									"array",
+									"null"
+								]
+							},
+							"excluded_member_ids": {
+								"$id": "#/properties/area_loads/properties/instance/properties/excluded_member_ids",
+								"title": "The excluded_member_ids Schema",
+								"description": "general_one_way only. Comma-separated member IDs to exclude from carrying the load.",
+								"type": [
+									"string",
+									"array",
+									"null"
+								]
+							},
+							"exclude_internal_members": {
+								"$id": "#/properties/area_loads/properties/instance/properties/exclude_internal_members",
+								"title": "The exclude_internal_members Schema",
+								"description": "general_one_way only. 'off', 'angled', or 'all': auto-excludes internal members not aligned to the span.",
+								"type": [
+									"string",
+									"null"
+								],
+								"enum": [
+									"off",
+									"angled",
+									"all",
+									null
+								]
+							},
+							"cantilever_extensions": {
+								"$id": "#/properties/area_loads/properties/instance/properties/cantilever_extensions",
+								"title": "The cantilever_extensions Schema",
+								"description": "general_one_way only. 'left,right' offsets extending the load polygon along the span to pick up cantilevered members.",
+								"type": [
+									"string",
+									"null"
+								]
+							},
+							"distributed_moments": {
+								"$id": "#/properties/area_loads/properties/instance/properties/distributed_moments",
+								"title": "The distributed_moments Schema",
+								"description": "Distributed moments applied as part of this area load.",
+								"type": [
+									"array",
+									"null"
+								]
+							},
+							"members": {
+								"$id": "#/properties/area_loads/properties/instance/properties/members",
+								"title": "The members Schema",
+								"description": "Member count/reference associated with the generated two-way plate load distribution.",
+								"type": [
+									"integer",
+									"number",
+									"string",
+									"null"
+								]
+							},
+							"elevation_direction": {
+								"$id": "#/properties/area_loads/properties/instance/properties/elevation_direction",
+								"title": "The elevation_direction Schema",
+								"description": "The direction used to interpret elevations for this area load.",
+								"type": [
+									"string",
+									"null"
+								]
+							},
+							"plate_material_id": {
+								"$id": "#/properties/area_loads/properties/instance/properties/plate_material_id",
+								"title": "The plate_material_id Schema",
+								"description": "Material ID assigned to plates auto-generated from this area load.",
+								"type": [
+									"integer",
+									"string",
+									"null"
+								]
+							},
+							"plate_thickness": {
+								"$id": "#/properties/area_loads/properties/instance/properties/plate_thickness",
+								"title": "The plate_thickness Schema",
+								"description": "Thickness assigned to plates auto-generated from this area load.",
+								"type": [
+									"number",
+									"string",
+									"null"
+								]
+							},
+							"plate_torsion": {
+								"$id": "#/properties/area_loads/properties/instance/properties/plate_torsion",
+								"title": "The plate_torsion Schema",
+								"description": "Whether torsion is considered for plates auto-generated from this area load.",
+								"type": [
+									"string",
+									"null"
+								],
+								"enum": [
+									"yes",
+									"no",
+									null
+								]
+							},
+							"plate_rotation": {
+								"$id": "#/properties/area_loads/properties/instance/properties/plate_rotation",
+								"title": "The plate_rotation Schema",
+								"description": "Rotation (about local Z) assigned to plates auto-generated from this area load.",
+								"type": [
+									"number",
+									"string",
+									"null"
+								]
+							},
+							"number_of_segments": {
+								"$id": "#/properties/area_loads/properties/instance/properties/number_of_segments",
+								"title": "The number_of_segments Schema",
+								"description": "Number of segments used to discretize plates auto-generated from this area load.",
+								"type": [
+									"integer",
+									"string",
+									"null"
+								]
+							}
 						},
 						"patternProperties": {
 							"LG|load_group": {
@@ -1701,14 +2322,10 @@ skyciv.validator = function () {
 						"$id": "#/properties/member_prestress_loads/instance",
 						"title": "The Member Prestress Load Instance Schema",
 						"required": [
-							"LG",
+							"load_group",
 							"member_id",
 							"prestress_magnitude"
 						],
-						"LG": {
-							"type": "string",
-							"pattern": "^(.+)$"
-						},
 						"$comment": "'id' must be pattern property. Conflicts with $id",
 						"patternProperties": {
 							"id": {
@@ -1716,15 +2333,21 @@ skyciv.validator = function () {
 								"minimum": 1
 							}
 						},
-						"member_id": {
-							"type": [
-								"integer",
-								"string"
-							],
-							"minimum": 1
-						},
-						"prestress_magnitude": {
-							"type": "number"
+						"properties": {
+							"load_group": {
+								"type": "string",
+								"pattern": "^(.+)$"
+							},
+							"member_id": {
+								"type": [
+									"integer",
+									"string"
+								],
+								"minimum": 1
+							},
+							"prestress_magnitude": {
+								"type": "number"
+							}
 						}
 					}
 				},
@@ -1733,7 +2356,7 @@ skyciv.validator = function () {
 			"self_weight": {
 				"$id": "#/properties/self_weight",
 				"title": "The self_weight Schema",
-				"description": "The self weight is an object defined by properties. It can be optionally enabled and applied a gravity multiplier in the x, y, or z axes",
+				"description": "The self weight is an object defined by properties. It can be optionally enabled and applied a gravity multiplier in the x, y, or z axes. Supports the legacy {enabled,x,y,z,LG} format and the simplified {direction,factor,LG} format.",
 				"type": "object",
 				"if": {
 					"required": [
@@ -1776,7 +2399,14 @@ skyciv.validator = function () {
 							"type": "number"
 						},
 						"LG": {
-							"$id": "#/properties/self_weight/instance/properties",
+							"description": "The Load Group to which the self weight belongs.",
+							"type": "string",
+							"pattern": "^SW[1-9]+[0-9]*$",
+							"errorMessage": {
+								"pattern": "should follow pattern \"SW\" followed by integer greater than 0 eg: \"SW2\"."
+							}
+						},
+						"load_group": {
 							"description": "The Load Group to which the self weight belongs.",
 							"type": "string",
 							"pattern": "^SW[1-9]+[0-9]*$",
@@ -1785,56 +2415,114 @@ skyciv.validator = function () {
 							}
 						},
 						"user_data": {}
-					}
+					},
+					"additionalProperties": false
 				},
 				"else": {
-					"patternProperties": {
-						"^[1-9][0-9]*$": {
-							"required": [
-								"x",
-								"y",
-								"z",
-								"LG"
-							],
-							"properties": {
-								"enabled": {
-									"$id": "#/properties/self_weight/instance/properties/enabled",
-									"title": "The Enabled Schema",
-									"description": "true = self weight enabled. false = self weight disabled",
-									"type": "boolean",
-									"default": false
+					"if": {
+						"required": [
+							"direction"
+						]
+					},
+					"then": {
+						"type": "object",
+						"required": [
+							"direction",
+							"factor"
+						],
+						"properties": {
+							"direction": {
+								"type": "string",
+								"enum": [
+									"X",
+									"Y",
+									"Z"
+								],
+								"description": "The axis along which self weight gravity acts."
+							},
+							"factor": {
+								"type": "number",
+								"description": "Gravity multiplier applied in the given direction (e.g. -1 for standard downward gravity)."
+							},
+							"LG": {
+								"type": "string",
+								"pattern": "^SW[0-9]*$",
+								"description": "The Load Group to which the self weight belongs. May be 'SW' alone (single self-weight case) or 'SW' followed by a number for multiple cases.",
+								"errorMessage": {
+									"pattern": "should be 'SW' optionally followed by an integer, eg. 'SW' or 'SW2'."
+								}
+							},
+							"load_group": {
+								"type": "string",
+								"pattern": "^SW[0-9]*$",
+								"errorMessage": {
+									"pattern": "should be 'SW' optionally followed by an integer, eg. 'SW' or 'SW2'."
+								}
+							},
+							"user_data": {}
+						},
+						"additionalProperties": false
+					},
+					"else": {
+						"patternProperties": {
+							"^[1-9][0-9]*$": {
+								"required": [
+									"x",
+									"y",
+									"z"
+								],
+								"properties": {
+									"enabled": {
+										"$id": "#/properties/self_weight/instance/properties/enabled",
+										"title": "The Enabled Schema",
+										"description": "true = self weight enabled. false = self weight disabled",
+										"type": "boolean",
+										"default": false
+									},
+									"x": {
+										"$id": "#/properties/self_weight/instance/properties/x",
+										"title": "The x Schema",
+										"description": "Acceleration due to gravity in the x axis measured in g's",
+										"default": 0,
+										"type": "number"
+									},
+									"y": {
+										"$id": "#/properties/self_weight/instance/properties/y",
+										"title": "The y Schema",
+										"description": "Acceleration due to gravity in the y axis measured in g's",
+										"default": 0,
+										"type": "number"
+									},
+									"z": {
+										"$id": "#/properties/self_weight/instance/properties/z",
+										"title": "The z Schema",
+										"description": "Acceleration due to gravity in the z axis measured in g's",
+										"default": 0,
+										"type": "number"
+									},
+									"LG": {
+										"description": "The Load Group to which the self weight belongs.",
+										"type": "string",
+										"pattern": "^SW[0-9]*$",
+										"errorMessage": {
+											"pattern": "should follow pattern \"SW\" followed by integer greater than 0 eg: \"SW2\"."
+										}
+									},
+									"load_group": {
+										"description": "The Load Group to which the self weight belongs.",
+										"type": "string",
+										"pattern": "^SW[0-9]*$",
+										"errorMessage": {
+											"pattern": "should follow pattern \"SW\" followed by integer greater than 0 eg: \"SW2\"."
+										}
+									},
+									"name": {
+										"description": "Legacy label for this self weight load case (older API format).",
+										"type": "string"
+									},
+									"user_data": {}
 								},
-								"x": {
-									"$id": "#/properties/self_weight/instance/properties/x",
-									"title": "The x Schema",
-									"description": "Acceleration due to gravity in the x axis measured in g's",
-									"default": 0,
-									"type": "number"
-								},
-								"y": {
-									"$id": "#/properties/self_weight/instance/properties/y",
-									"title": "The y Schema",
-									"description": "Acceleration due to gravity in the y axis measured in g's",
-									"default": 0,
-									"type": "number"
-								},
-								"z": {
-									"$id": "#/properties/self_weight/instance/properties/z",
-									"title": "The z Schema",
-									"description": "Acceleration due to gravity in the z axis measured in g's",
-									"default": 0,
-									"type": "number"
-								},
-								"LG": {
-									"$id": "#/properties/self_weight/instance/properties/lg",
-									"description": "The Load Group to which the self weight belongs.",
-									"type": "string",
-									"pattern": "^SW[1-9]+[0-9]*$",
-									"errorMessage": {
-										"pattern": "should follow pattern \"SW\" followed by integer greater than 0 eg: \"SW2\"."
-									}
-								},
-								"user_data": {}
+								"additionalProperties": false
 							}
 						}
 					}
@@ -1856,18 +2544,29 @@ skyciv.validator = function () {
 								"title": "The Load Combination Name Schema",
 								"type": "string"
 							},
-							"user_data": {}
+							"user_data": {},
+							"criteria": {
+								"$id": "#/properties/load_combinations/instance/properties/criteria",
+								"title": "The criteria Schema",
+								"type": "string",
+								"enum": [
+									"strength",
+									"serviceability",
+									"other"
+								],
+								"description": "Whether this load combination is intended for strength design, serviceability checks, or other purposes."
+							}
 						},
 						"patternProperties": {
-							"^(!name)(.+)$": {
-								"$id": "#/properties/load_combinations/instance/pattern_properties/lg",
-								"title": "The LG Schema",
-								"description": "This is the Load Group Factor. Do not confuse with Load Group Name!",
-								"type": "number"
-							},
 							"^(SW)[1-9][0-9]*$": {
 								"$id": "#/properties/load_combinations/instance/pattern_properties/sw",
 								"title": "The SW1 Schema",
+								"type": "number"
+							},
+							"^(?!name$)(?!criteria$)(?!user_data$)(.+)$": {
+								"$id": "#/properties/load_combinations/instance/pattern_properties/lg",
+								"title": "The LG Schema",
+								"description": "This is the Load Group Factor. Do not confuse with Load Group Name!",
 								"type": "number"
 							}
 						}
@@ -1888,107 +2587,6 @@ skyciv.validator = function () {
 							},
 							"expand_wind_loads": {
 								"type": "boolean"
-							}
-						}
-					}
-				},
-				"additionalProperties": false
-			},
-			"load_cases": {
-				"$id": "#/properties/load_cases",
-				"title": "The load_cases Schema",
-				"type": "object",
-				"patternProperties": {
-					"^AISC$|^ASCE$": {
-						"$id": "#/properties/load_cases/properties/instance/united_states",
-						"title": "The Load Cases Instance Schema",
-						"patternProperties": {
-							"^(.+)$": {
-								"type": "string",
-								"enum": [
-									"Dead: dead",
-									"Live: live",
-									"Wind: wind",
-									"Snow: snow",
-									"Snow: Roof live",
-									"Snow: Rain",
-									"Temp: temp",
-									"Acci: acci",
-									"Seis: seis",
-									"Seis: strength",
-									"Seis: service level"
-								],
-								"default": "Dead: dead"
-							}
-						}
-					},
-					"^AS$": {
-						"$id": "#/properties/load_cases/properties/instance/australia",
-						"title": "The Load Cases Instance Schema",
-						"patternProperties": {
-							"^(.+)$": {
-								"type": "string",
-								"enum": [
-									"Dead: G-permanent",
-									"Live: Q-distr-floor",
-									"Live: Q-distr-storage",
-									"Live: Q-distr-roof-floor",
-									"Live: Q-distr-roof-other",
-									"Live: Q-conc-floor,roof",
-									"Live: Q-conc-floor domestic",
-									"Live: Q-conc-roof-other",
-									"Live: Q-conc-machinery",
-									"Wind: Wu-wind",
-									"Snow: Su",
-									"Seis: Eu-earthquake"
-								],
-								"default": "Dead: G-permanent"
-							}
-						}
-					},
-					"^EN$": {
-						"$id": "#/properties/load_cases/properties/instance/europe",
-						"title": "The Load Cases Instance Schema",
-						"patternProperties": {
-							"^(.+)$": {
-								"type": "string",
-								"enum": [
-									"Dead: Unfavourable",
-									"Dead: Favourable",
-									"Live: CAT A",
-									"Live: CAT B",
-									"Live: CAT C",
-									"Live: CAT D",
-									"Live: CAT E",
-									"Live: CAT F",
-									"Live: CAT G",
-									"Live: CAT H",
-									"Snow: H <= 1000m",
-									"Live: H > 1000m",
-									"Wind: wind",
-									"Temp: non-fire",
-									"Acci: acci",
-									"Seis: seis"
-								],
-								"default": "Dead: Unfavourable"
-							}
-						}
-					},
-					"^NBCC$": {
-						"$id": "#/properties/load_cases/properties/instance/canada",
-						"title": "The Load Cases Instance Schema",
-						"patternProperties": {
-							"^(.+)$": {
-								"type": "string",
-								"enum": [
-									"Dead: unfavourable",
-									"Dead: favourable",
-									"Live: live",
-									"Wind: wind",
-									"Snow: snow",
-									"Seis: Earthquake/Accidental"
-								],
-								"default": "Dead: unfavourable"
 							}
 						}
 					}
@@ -2035,6 +2633,10 @@ skyciv.validator = function () {
 							"rz_mass": {
 								"type": "number",
 								"minimum": 0
+							},
+							"source": {
+								"type": "string",
+								"description": "Indicates how the nodal mass was generated, e.g. 'User Defined'."
 							}
 						}
 					}
@@ -2103,11 +2705,15 @@ skyciv.validator = function () {
 							"design_code": {
 								"$id": "#/properties/spectral_loads/properties/instance/properties/design_code",
 								"description": "The selected design code if the load was generated via design code.",
-								"type": "string",
+								"type": [
+									"string",
+									"null"
+								],
 								"enum": [
 									"EN8",
 									"ASCE",
-									""
+									"",
+									null
 								]
 							},
 							"design_data": {
@@ -2241,11 +2847,206 @@ skyciv.validator = function () {
 								"$id": "#/properties/spectral_loads/properties/instance/properties/lg",
 								"description": "The load group this load belongs to",
 								"pattern": "^(.+)$"
+							},
+							"save_sign": {
+								"$id": "#/properties/spectral_loads/properties/instance/properties/save_sign",
+								"description": "Whether to preserve the sign of results when combining modal responses.",
+								"type": "string",
+								"enum": [
+									"yes",
+									"no"
+								]
 							}
 						}
 					}
 				},
 				"additionalProperties": false
+			},
+			"thermal_loads": {
+				"$id": "#/properties/thermal_loads",
+				"title": "The thermal_loads Schema",
+				"description": "Each thermal load is defined by an object with properties, applying a temperature change to a member or plate.",
+				"type": "object",
+				"patternProperties": {
+					"^(.+)$": {
+						"$id": "#/properties/thermal_loads/properties/instance",
+						"title": "The Thermal Load Instance Schema",
+						"type": "object",
+						"properties": {
+							"element_type": {
+								"type": "string",
+								"enum": [
+									"member",
+									"plate"
+								],
+								"description": "The type of element this thermal load is applied to."
+							},
+							"element_id": {
+								"type": [
+									"integer",
+									"string"
+								],
+								"minimum": 1,
+								"description": "The ID of the member or plate this thermal load is applied to."
+							},
+							"thermal_load": {
+								"type": "number",
+								"description": "The temperature change applied by this thermal load."
+							},
+							"load_group": {
+								"type": "string",
+								"pattern": "^(.+)$",
+								"description": "The load group to which this load belongs."
+							},
+							"user_data": {}
+						}
+					}
+				},
+				"additionalProperties": false
+			},
+			"moving_loads": {
+				"$id": "#/properties/moving_loads",
+				"title": "The moving_loads Schema",
+				"description": "Moving/vehicle load definitions, comprising traffic lines, vehicle loads, and generated load cases.",
+				"type": "object",
+				"properties": {
+					"traffic_lines": {
+						"$id": "#/properties/moving_loads/properties/traffic_lines",
+						"title": "The traffic_lines Schema",
+						"description": "Traffic lines defining paths along which vehicle loads travel across members.",
+						"type": "object",
+						"patternProperties": {
+							"^(.+)$": {
+								"type": "object"
+							}
+						}
+					},
+					"vehicle_loads": {
+						"$id": "#/properties/moving_loads/properties/vehicle_loads",
+						"title": "The vehicle_loads Schema",
+						"description": "Vehicle load definitions (axle spacings, weights, etc.) applied to traffic lines.",
+						"type": "object",
+						"patternProperties": {
+							"^(.+)$": {
+								"type": "object"
+							}
+						}
+					},
+					"cases": {
+						"$id": "#/properties/moving_loads/properties/cases",
+						"title": "The cases Schema",
+						"description": "Generated moving load cases combining vehicle loads with traffic lines.",
+						"type": "object",
+						"patternProperties": {
+							"^(.+)$": {
+								"type": "object"
+							}
+						}
+					}
+				}
+			},
+			"suppress": {
+				"$id": "#/properties/suppress",
+				"title": "The suppress Schema",
+				"description": "Tracks which model elements are suppressed (hidden from analysis) per named suppression set, plus the currently active set.",
+				"type": "object",
+				"properties": {
+					"current_case": {
+						"type": "string",
+						"description": "The name of the currently active suppression set."
+					}
+				},
+				"patternProperties": {
+					"^(?!current_case$)(.+)$": {
+						"$id": "#/properties/suppress/properties/instance",
+						"title": "The Suppress Set Instance Schema",
+						"type": "object",
+						"description": "A named suppression set. Each property is an array of suppressed IDs for that element collection.",
+						"properties": {
+							"members": {
+								"type": "array"
+							},
+							"plates": {
+								"type": "array"
+							},
+							"supports": {
+								"type": "array"
+							},
+							"moments": {
+								"type": "array"
+							},
+							"distributed_loads": {
+								"type": "array"
+							},
+							"point_loads": {
+								"type": "array"
+							},
+							"area_loads": {
+								"type": "array"
+							},
+							"pressures": {
+								"type": "array"
+							},
+							"load_combinations": {
+								"type": "array"
+							}
+						}
+					}
+				}
+			},
+			"load_combination_settings": {
+				"$id": "#/properties/load_combination_settings",
+				"title": "The load_combination_settings Schema",
+				"description": "Settings controlling automatic generation of code-based load combinations from load_cases.",
+				"type": "object",
+				"properties": {
+					"country": {
+						"type": "string",
+						"description": "The country associated with the selected design code."
+					},
+					"code": {
+						"type": "string",
+						"description": "The design code (and version) used to auto-generate load combinations, e.g. 'AS-1170.0-2002'."
+					},
+					"criteria": {
+						"type": "string",
+						"description": "Which combination criteria to generate, e.g. 'All'."
+					},
+					"filters": {
+						"type": "object",
+						"description": "UI filter selections used when generating load combinations."
+					},
+					"load_case_order": {
+						"type": "array",
+						"description": "The display/generation order of load group names."
+					},
+					"patterns": {
+						"type": "object",
+						"description": "Load pattern and ratio settings (e.g. simultaneous vs alternate, main/alternate ratios) used when generating combinations."
+					},
+					"load_case_mappings": {
+						"type": "object",
+						"description": "Maps short load group codes to their full descriptive load case names."
+					},
+					"load_case_sub_groups": {
+						"type": "array",
+						"description": "Sub-group assignments for load group names, used to control which load groups are combined together.",
+						"items": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"sub_group": {
+									"type": [
+										"integer",
+										"string"
+									]
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -2816,6 +3617,76 @@ skyciv.validator = function () {
 			if (has_auth && has_file_management && has_analysis_report) {
 				return true;
 			}
+		},
+		"selfWeight": function (model_data) {
+			if (model_data.hasOwnProperty("self_weight")) {
+				if (this.hasSelfWeightInstances(model_data.self_weight)) {
+					let self_weight = model_data.self_weight;
+					let instances = this.getInstances(model_data.self_weight);
+					let errors = [];
+
+					for (const instance in instances) {
+						let pointer = instances[instance].toString();
+						let has_LG = self_weight[pointer].hasOwnProperty("LG");
+						let has_load_group = self_weight[pointer].hasOwnProperty("load_group");
+
+						if (has_LG && has_load_group) {
+							errors.push({
+								keyword: 'oneOf',
+								dataPath: '/selfWeight[' + pointer + ']',
+								message: "Has both 'LG' and 'load_group'. Please use one exclusively."
+							})
+						}
+					}
+
+					if (errors.length > 0) {
+						return errors;
+					} else {
+						return true;
+					}
+				} else {
+					let self_weight = model_data.self_weight;
+					let has_LG = self_weight.hasOwnProperty("LG");
+					let has_load_group = self_weight.hasOwnProperty("load_group");
+
+					if (has_LG && has_load_group) {
+						return [{
+							keyword: 'oneOf',
+							dataPath: '/selfWeight',
+							message: "Has both 'LG' and 'load_group'. Please use one exclusively."
+						}]
+					} else {
+						return true;
+					}
+				}
+			}
+		},
+		"hasSelfWeightInstances": function (model_data) {
+			const property_names = Object.keys(model_data);
+
+			for (const property_name of property_names) {
+				const number_value = parseInt(property_name);
+
+				if (!isNaN(number_value)) {
+					return true;
+				}
+			}
+
+			return false;
+		},
+		"getInstances": function (self_weight) {
+			const property_names = Object.keys(self_weight);
+			let instances = [];
+
+			for (const property_name of property_names) {
+				const number_value = parseInt(property_name);
+
+				if (!isNaN(number_value)) {
+					instances.push(number_value);
+				}
+			}
+
+			return instances;
 		}
 	}
 
@@ -3044,6 +3915,24 @@ skyciv.validator = function () {
 				if (sections_result !== true) {
 					// console.log(sections_result);
 					var error_obj = errorResponse(sections_result);
+					// console.log(error_obj);
+
+					for (var e = 0; e < error_obj.errors.length; e++) {
+						if (typeof error_obj.errors[e] === "string") {
+							error_obj.errors.splice(e, 1);
+							e--;
+						}
+					}
+
+					// console.log(error_obj);
+					return error_obj;
+				}
+
+				var selfweight_result = structuralChecks.selfWeight(model_data);
+
+				if (selfweight_result !== true) {
+					console.log(selfweight_result);
+					var error_obj = errorResponse(selfweight_result);
 					// console.log(error_obj);
 
 					for (var e = 0; e < error_obj.errors.length; e++) {
