@@ -1,7 +1,3 @@
-// If you wish to test in something like jsfiddle, there is a simulated function call at the bottom of this script.
-// skyciv.validator.model({ your_skyciv_model }, log_flag)
-// If log_flag is set to true the result of the validation is returned to the console.
-
 if (typeof skyciv == "undefined") var skyciv = {};
 
 skyciv.validator = function () {
@@ -10,7 +6,524 @@ skyciv.validator = function () {
 	// BEGIN S3D MODEL SCHEMA ==== Do not remove! ============================================================
 	var model_schema = {
 		"$comment": "This schema for S3D models generally follows this pattern: $id, title, description, and then any keys evaluated by Ajv (type, required etc.)",
-		"definitions": {},
+		"definitions": {
+			"section_info": {
+				"title": "The Section Database (info) Schema",
+				"description": "A section selected from the Section Database, described by its \"info\" object.",
+				"type": "object",
+				"required": [
+					"info"
+				],
+				"properties": {
+					"info": {
+						"properties": {
+							"selection": {
+								"properties": {
+									"family_code": {
+										"type": [
+											"string"
+										],
+										"pattern": "^(.)+$"
+									},
+									"family_name": {
+										"type": [
+											"string"
+										],
+										"pattern": "^(.)+$"
+									},
+									"section_name": {
+										"type": [
+											"string"
+										],
+										"pattern": "^(.)+$"
+									},
+									"name": {
+										"type": [
+											"string"
+										],
+										"pattern": "^(.)+$"
+									}
+								}
+							},
+							"shape": {
+								"type": [
+									"string"
+								],
+								"pattern": "^(.)+$",
+								"description": "The shape type, eg. \"rectangle\", \"hollow rectangle\", \"circle\", \"hollow circle\", \"ibeam\", \"tbeam\", \"lbeam\", \"channel\", \"lipped channel\", \"zshape\", \"lipped zshape\", \"lipped angle\" or \"lipped channel box\"."
+							},
+							"dimensions": {
+								"description": "The dimensions of the shape. The keys depend on the shape, eg. {\"h\": 150, \"b\": 100} for a rectangle.",
+								"type": "object",
+								"additionalProperties": {
+									"type": "number"
+								}
+							}
+						},
+						"description": "The shape information, containing the shape type and its dimensions."
+					},
+					"user_data": {},
+					"name": {
+						"description": "The name of the section.",
+						"type": "string"
+					},
+					"material_id": {
+						"title": "The Material ID Schema",
+						"description": "The ID of the material that is assigned to the section. Materials are defined in their own object.",
+						"type": "integer",
+						"minimum": 1
+					},
+					"non_prismatic": {
+						"$ref": "#/definitions/section_non_prismatic"
+					}
+				}
+			},
+			"section_builder": {
+				"title": "The Section Builder Schema",
+				"description": "A section whose properties are explicitly defined. If the Section Builder was used, an \"aux\" property will be present which defines the geometry of the section.",
+				"type": "object",
+				"required": [
+					"area",
+					"Iz",
+					"Iy",
+					"J",
+					"material_id"
+				],
+				"properties": {
+					"version": {
+						"title": "The version Schema",
+						"description": "The version of the 'Section Builder' that was used to construct this object.",
+						"type": [
+							"integer",
+							"string"
+						],
+						"examples": [
+							1
+						],
+						"minimum": 1,
+						"pattern": "^[0-9]+$",
+						"errorMessage": {
+							"pattern": "should be a positive integer."
+						}
+					},
+					"name": {
+						"title": "The name Schema",
+						"description": "The name of your section. If nothing is entered, the name will default to the (rounded) height x width dimension.",
+						"type": "string",
+						"default": "",
+						"examples": [
+							"203 x 203"
+						],
+						"pattern": "^(.*)$"
+					},
+					"area": {
+						"title": "The area Schema",
+						"description": "Cross sectional area.",
+						"type": "number",
+						"exclusiveMinimum": 0
+					},
+					"Iy": {
+						"title": "The Iy Schema",
+						"description": "Area moment of inertia about the y axis.",
+						"type": "number",
+						"exclusiveMinimum": 0
+					},
+					"Iz": {
+						"title": "The Iz Schema",
+						"description": "Area moment of inertia about the z axis.",
+						"type": "number",
+						"exclusiveMinimum": 0
+					},
+					"J": {
+						"title": "The J Schema",
+						"description": "Torsion constant.",
+						"type": "number",
+						"exclusiveMinimum": 0
+					},
+					"material_id": {
+						"title": "The material_id Schema",
+						"description": "The ID of the material that is assigned to the cross section. Materials are defined in its own object.",
+						"type": "integer",
+						"minimum": 1
+					},
+					"shear_area_z": {
+						"title": "The shear_area_z Schema",
+						"description": "Optional. Do not get confused between this property and the one with the same name within the 'aux' property. Shear Area in the Z-axis. Leave this value as Empty or Zero for a Euler-Bernoulli Beam (Recommended). Enter a value for a Timoshenko Beam (i.e. where shear deformation is not neglible).",
+						"type": [
+							"number",
+							"null",
+							"string"
+						],
+						"pattern": "^([0-9]*\\.?[0-9]*)$",
+						"examples": [
+							500,
+							null
+						]
+					},
+					"shear_area_y": {
+						"title": "The shear_area_y Schema",
+						"description": "Optional. Do not get confused between this property and the one with the same name within the 'aux' property. Shear Area in the Y-axis. Leave this value as Empty or Zero for a Euler-Bernoulli Beam (Recommended). Enter a value for a Timoshenko Beam (i.e. where shear deformation is not neglible).",
+						"type": [
+							"number",
+							"null",
+							"string"
+						],
+						"pattern": "^([0-9]*\\.?[0-9]*)$",
+						"examples": [
+							800,
+							null
+						]
+					},
+					"revit": {
+						"type": [
+							"string",
+							"null"
+						]
+					},
+					"aux": {
+						"title": "The aux Schema",
+						"description": "The 'aux' property is an object containing various property values. It contains the geometric coordinates of the cross section among other properties which are calculated via the 'Section Builder' software. For brevity, the individual properties are not detailed here. To understand how to create a section via the 'Section Builder' and implement it into the API, please contact us at info@skyciv.com",
+						"type": "object",
+						"required": [
+							"composite",
+							"Qz",
+							"Qy",
+							"centroid_point",
+							"centroid_length",
+							"depth",
+							"width",
+							"alpha",
+							"shear_area_z",
+							"shear_area_y",
+							"torsion_radius"
+						],
+						"properties": {
+							"composite": {
+								"title": "The composite Schema",
+								"type": "boolean",
+								"default": false
+							},
+							"Qz": {
+								"title": "The Qz Schema",
+								"default": 0,
+								"type": "number"
+							},
+							"Qy": {
+								"title": "The Qy Schema",
+								"default": 0,
+								"type": "number"
+							},
+							"centroid_point": {
+								"title": "The centroid_point Schema",
+								"type": "array",
+								"minItems": 2,
+								"maxItems": 2,
+								"items": {
+									"type": "number",
+									"title": "The Items Schema",
+									"default": 0,
+									"examples": [
+										101.6,
+										101.6
+									]
+								}
+							},
+							"centroid_length": {
+								"title": "The centroid_length Schema",
+								"type": "array",
+								"minItems": 2,
+								"maxItems": 2,
+								"items": {
+									"type": "number",
+									"title": "The Items Schema",
+									"default": 0,
+									"examples": [
+										101.6,
+										101.6
+									]
+								}
+							},
+							"depth": {
+								"title": "The depth Schema",
+								"default": 0,
+								"type": "number"
+							},
+							"width": {
+								"title": "The width Schema",
+								"default": 0,
+								"type": "number"
+							},
+							"alpha": {
+								"title": "The alpha Schema",
+								"default": 0,
+								"type": "number"
+							},
+							"Zy": {
+								"title": "The Zy Schema",
+								"type": "number"
+							},
+							"Zz": {
+								"title": "The Zz Schema",
+								"type": "number"
+							},
+							"warping_constant": {
+								"title": "The warping_constant Schema",
+								"type": "number"
+							},
+							"shear_area_z": {
+								"title": "The shear_area_z Schema",
+								"default": 0,
+								"type": "number"
+							},
+							"shear_area_y": {
+								"title": "The shear_area_y Schema",
+								"default": 0,
+								"type": "number"
+							},
+							"torsion_radius": {
+								"title": "The torsion_radius Schema",
+								"default": 0,
+								"type": "number"
+							},
+							"polygons": {
+								"description": "The shapes that make up the section, as constructed by the Section Builder.",
+								"type": "array",
+								"items": {
+									"type": "object"
+								}
+							},
+							"non_prismatic": {
+								"description": "Non-prismatic data calculated by the Section Builder.",
+								"type": [
+									"object",
+									"null"
+								]
+							},
+							"shear_center": {
+								"description": "The shear centre of the section.",
+								"type": "array",
+								"items": {
+									"type": "number"
+								}
+							},
+							"beta_yp": {
+								"description": "Monosymmetry constant about the principal y-axis.",
+								"type": "number"
+							},
+							"beta_zp": {
+								"description": "Monosymmetry constant about the principal z-axis.",
+								"type": "number"
+							},
+							"principal_properties": {
+								"description": "Section properties about the principal axes, calculated by the Section Builder.",
+								"type": "object"
+							},
+							"original_properties": {
+								"description": "Section properties about the original (geometric) axes, calculated by the Section Builder.",
+								"type": "object"
+							},
+							"shear_properties": {
+								"description": "Shear properties at points through the section, calculated by the Section Builder.",
+								"type": "array",
+								"items": {
+									"type": "object"
+								}
+							},
+							"extreme_stress_properties": {
+								"description": "The points and factors of extreme stress in the section, calculated by the Section Builder.",
+								"type": "object"
+							}
+						}
+					},
+					"user_data": {},
+					"color": {
+						"description": "The display colour of the section.",
+						"type": "object",
+						"properties": {
+							"r": {
+								"type": "number"
+							},
+							"g": {
+								"type": "number"
+							},
+							"b": {
+								"type": "number"
+							},
+							"a": {
+								"type": "number"
+							}
+						}
+					},
+					"non_prismatic": {
+						"$ref": "#/definitions/section_non_prismatic"
+					}
+				}
+			},
+			"section_load_section": {
+				"title": "The Load Section Schema",
+				"description": "A section loaded from the Section Database by its path, eg. [\"American\", \"AISC\", \"W shapes\", \"W14x808\"].",
+				"type": "object",
+				"required": [
+					"load_section",
+					"material_id"
+				],
+				"properties": {
+					"load_section": {
+						"type": [
+							"array",
+							"string"
+						],
+						"title": "The Load Section Schema",
+						"$comment": "Array is a list of strings eg. ['American', 'AISC', 'W shapes', 'W14x808']",
+						"items": {
+							"type": "string"
+						},
+						"minItems": 4,
+						"maxItems": 4
+					},
+					"material_id": {
+						"title": "The Material ID Schema",
+						"description": "The material attached to this particle section.",
+						"type": [
+							"integer",
+							"string"
+						],
+						"minimum": 1,
+						"pattern": "^([1-9]+[0-9]*)$",
+						"errorMessage": {
+							"pattern": "ID should be a number without leading zeroes."
+						}
+					},
+					"user_data": {},
+					"non_prismatic": {
+						"$ref": "#/definitions/section_non_prismatic"
+					}
+				}
+			},
+			"section_load_custom": {
+				"title": "The Load Custom Section Schema",
+				"description": "A custom section loaded by the name it was saved under in the Section Builder.",
+				"type": "object",
+				"required": [
+					"load_custom"
+				],
+				"properties": {
+					"load_custom": {
+						"title": "The Load Custom Schema",
+						"description": "The name of a section saved in \"My Sections\" of the Section Builder. Use an array to specify the folders of your storage, eg. [\"Folder1\", \"Folder2\", \"reinforced-channel\"].",
+						"type": [
+							"string",
+							"array"
+						],
+						"items": {
+							"type": "string"
+						},
+						"minItems": 1
+					},
+					"material_id": {
+						"title": "The Material ID Schema",
+						"description": "The ID of the material assigned to all shapes in the section. If not provided, the materials saved with the section are used.",
+						"type": "integer",
+						"minimum": 1
+					},
+					"non_prismatic": {
+						"$ref": "#/definitions/section_non_prismatic"
+					},
+					"user_data": {}
+				}
+			},
+			"section_non_prismatic": {
+				"title": "The Non-Prismatic Schema",
+				"description": "Defines the ENDING shape of a non-prismatic member (at node B). The section itself defines the STARTING shape (at node A). Supported shapes: rectangle, hollow rectangle, ibeam, tbeam and lipped channel box.",
+				"type": [
+					"object",
+					"null"
+				],
+				"properties": {
+					"enabled": {
+						"description": "Whether the non-prismatic definition is enabled for this section.",
+						"type": "boolean"
+					},
+					"type": {
+						"description": "Currently only tapers can be defined through the API.",
+						"type": "string",
+						"examples": [
+							"taper"
+						]
+					},
+					"depth_taper": {
+						"description": "Defines how the depth of the section varies along the member.",
+						"type": "object",
+						"properties": {
+							"top": {
+								"description": "Whether the top edge of the section tapers.",
+								"type": "boolean"
+							},
+							"bottom": {
+								"description": "Whether the bottom edge of the section tapers.",
+								"type": "boolean"
+							},
+							"start": {
+								"description": "The starting depth. If omitted, it is taken from the starting shape.",
+								"type": "number",
+								"exclusiveMinimum": 0
+							},
+							"end": {
+								"description": "The ending depth.",
+								"type": "number",
+								"exclusiveMinimum": 0
+							}
+						}
+					},
+					"width_taper": {
+						"description": "Defines how the width of the section varies along the member.",
+						"type": "object",
+						"properties": {
+							"left": {
+								"description": "Whether the left edge of the section tapers.",
+								"type": "boolean"
+							},
+							"right": {
+								"description": "Whether the right edge of the section tapers.",
+								"type": "boolean"
+							},
+							"start": {
+								"description": "The starting width. If omitted, it is taken from the starting shape.",
+								"type": "number",
+								"exclusiveMinimum": 0
+							},
+							"end": {
+								"description": "The ending width.",
+								"type": "number",
+								"exclusiveMinimum": 0
+							}
+						}
+					},
+					"consider_offsets": {
+						"description": "Whether offsets are added to the prismatic member segments so the centerlines of each segment are aligned.",
+						"type": "boolean",
+						"default": false
+					},
+					"member_sizes": {
+						"description": "How the size of each segment is taken.",
+						"type": "string",
+						"default": "average",
+						"enum": [
+							"average",
+							"maximum",
+							"minimum"
+						]
+					},
+					"segments": {
+						"description": "The number of segments the member is divided into to approximate the varying shape.",
+						"type": "integer",
+						"default": 4,
+						"minimum": 2,
+						"maximum": 10
+					}
+				}
+			}
+		},
 		"$schema": "http://json-schema.org/draft-07/schema#",
 		"title": "The Model Schema",
 		"description": "Expected input for S3D model.",
@@ -404,6 +917,27 @@ skyciv.validator = function () {
 						"title": "The visibility Schema",
 						"description": "UI display-flags bag controlling visibility of various model entities and overlays.",
 						"type": "object"
+					},
+					"analysis_type": {
+						"$id": "#/properties/settings/properties/analysis_type",
+						"title": "The analysis_type Schema",
+						"description": "The analysis type selected when the model was exported from S3D.",
+						"type": [
+							"integer",
+							"string"
+						]
+					},
+					"analysis_report": {
+						"$id": "#/properties/settings/properties/analysis_report",
+						"title": "The analysis_report Schema",
+						"description": "Whether an analysis report was requested. Set by older versions of S3D.",
+						"type": "boolean"
+					},
+					"UnitSystem": {
+						"$id": "#/properties/settings/properties/UnitSystem",
+						"title": "The UnitSystem Schema",
+						"description": "The unit system. Set by older versions of S3D; use \"units\" instead.",
+						"type": "string"
 					}
 				}
 			},
@@ -688,6 +1222,53 @@ skyciv.validator = function () {
 									"number",
 									"string"
 								]
+							},
+							"local_axis_y": {
+								"$id": "#/properties/members/properties/instance/properties/local_axis_y",
+								"title": "The local_axis_y Schema",
+								"description": "A global axis vector [X, Y, Z] for the direction of the local y-axis of the member (typically the minor axis). If provided, there is no need to provide local_axis_z.",
+								"type": "array",
+								"minItems": 3,
+								"maxItems": 3,
+								"items": {
+									"type": "number"
+								}
+							},
+							"local_axis_z": {
+								"$id": "#/properties/members/properties/instance/properties/local_axis_z",
+								"title": "The local_axis_z Schema",
+								"description": "A global axis vector [X, Y, Z] for the direction of the local z-axis of the member (typically the major axis). If provided, there is no need to provide local_axis_y.",
+								"type": "array",
+								"minItems": 3,
+								"maxItems": 3,
+								"items": {
+									"type": "number"
+								}
+							},
+							"mirror": {
+								"$id": "#/properties/members/properties/instance/properties/mirror",
+								"title": "The mirror Schema",
+								"description": "Mirrors the member's section about its local y-axis, z-axis, or both, without needing a separately mirrored section.",
+								"type": "string",
+								"default": "no",
+								"enum": [
+									"no",
+									"y",
+									"z",
+									"y_and_z"
+								]
+							},
+							"label": {
+								"$id": "#/properties/members/properties/instance/properties/label",
+								"title": "The label Schema",
+								"description": "A label for the member.",
+								"type": "string"
+							},
+							"RotationAngle": {
+								"$id": "#/properties/members/properties/instance/properties/RotationAngle",
+								"title": "The RotationAngle Schema",
+								"description": "Set by older versions of S3D; use rotation_angle instead.",
+								"type": "number"
 							}
 						},
 						"errorMessage": {
@@ -903,6 +1484,22 @@ skyciv.validator = function () {
 									"string",
 									"null"
 								]
+							},
+							"isMeshed": {
+								"$id": "#/properties/plates/properties/instance/properties/isMeshed",
+								"title": "The isMeshed Schema",
+								"description": "Whether the plate is already meshed. If true, the mesh elements must be specified in meshed_plates with their parent_plate set to the ID of this plate.",
+								"type": "boolean",
+								"default": false
+							},
+							"name": {
+								"$id": "#/properties/plates/properties/instance/properties/name",
+								"title": "The name Schema",
+								"description": "A name for the plate.",
+								"type": [
+									"string",
+									"null"
+								]
 							}
 						},
 						"$comment": "patternProperties checks for is_meshed or isMeshed key. A proposed change to ajv is 'patternRequired'",
@@ -998,6 +1595,30 @@ skyciv.validator = function () {
 					}
 				},
 				"additionalProperties": false
+			},
+			"sections": {
+				"$id": "#/properties/sections",
+				"title": "The sections Schema",
+				"description": "Each section is defined as an object, keyed by its ID. A section must follow one of four specifications: Section Database (info), Section Builder (explicit properties), load_section or load_custom.",
+				"type": "object",
+				"patternProperties": {
+					"^(.+)$": {
+						"anyOf": [
+							{
+								"$ref": "#/definitions/section_info"
+							},
+							{
+								"$ref": "#/definitions/section_builder"
+							},
+							{
+								"$ref": "#/definitions/section_load_section"
+							},
+							{
+								"$ref": "#/definitions/section_load_custom"
+							}
+						]
+					}
+				}
 			},
 			"materials": {
 				"$id": "#/properties/materials",
@@ -1167,6 +1788,37 @@ skyciv.validator = function () {
 									"number",
 									"null"
 								]
+							},
+							"version": {
+								"$id": "#/properties/materials/properties/instance/properties/version",
+								"title": "The version Schema",
+								"description": "The version of the material definition.",
+								"type": [
+									"string",
+									"integer"
+								]
+							},
+							"aux": {
+								"$id": "#/properties/materials/properties/instance/properties/aux",
+								"title": "The aux Schema",
+								"description": "Additional material properties from the SkyCiv material database, such as design strengths, the units of each property and the database selection path.",
+								"type": "object",
+								"properties": {
+									"units": {
+										"description": "The unit type of each material property.",
+										"type": "object"
+									},
+									"selections": {
+										"description": "The path of the material in the SkyCiv material database, eg. [\"Metric\", \"Steel\", \"AS/NZS 3678\", \"Grade 450, 450L15\"].",
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									}
+								},
+								"additionalProperties": {
+									"description": "Design properties of the material. The keys depend on the material class and design code, eg. \"Fb\", \"Ft\", \"Fv\" (NDS wood) or \"fb\", \"fs_edge\", \"seasoned\" (AS 1720 wood)."
+								}
 							}
 						}
 					}
@@ -1701,7 +2353,16 @@ skyciv.validator = function () {
 								"description": "The load group which the point load is to be grouped to.",
 								"type": "string"
 							},
-							"user_data": {}
+							"user_data": {},
+							"name": {
+								"$id": "#/properties/moments/properties/instance/properties/name",
+								"title": "The name Schema",
+								"description": "A name for the moment.",
+								"type": [
+									"string",
+									"null"
+								]
+							}
 						}
 					}
 				},
@@ -2004,78 +2665,178 @@ skyciv.validator = function () {
 						"title": "The Area Load Instance Schema",
 						"type": "object",
 						"required": [
-							"type",
-							"nodes"
+							"type"
 						],
-						"if": {
-							"properties": {
-								"type": {
-									"const": "column_wind_load"
-								}
-							}
-						},
-						"then": {
-							"properties": {
-								"mags": {
-									"$id": "#/properties/area_loads/properties/instance/properties/mags",
-									"title": "The mags Schema",
-									"description": "Comma-seperated list of magnitudes matching the number of elevations in the load.",
-									"type": [
-										"string",
-										"number",
-										"array"
-									],
-									"if": {
-										"type": "string"
-									},
-									"then": {
-										"pattern": "^-?(\\d+(\\.\\d+)?|\\.\\d+)(,-?(\\d+(\\.\\d+)?|\\.\\d+))*$",
-										"errorMessage": {
-											"pattern": "should be number or a comma-seperated list of numbers eg. '1.2' or '0.2,0.5'"
+						"allOf": [
+							{
+								"if": {
+									"properties": {
+										"type": {
+											"const": "non_rectangular"
 										}
-									},
-									"items": {
-										"type": "number"
 									}
-								}
-							}
-						},
-						"else": {
-							"properties": {
-								"mag": {
-									"$id": "#/properties/area_loads/properties/instance/properties/mag",
-									"title": "The mag Schema",
-									"description": "The pressure magnitude.",
-									"type": [
-										"number",
-										"null"
+								},
+								"then": {
+									"required": [
+										"members"
 									]
 								},
-								"direction": {
-									"$id": "#/properties/area_loads/properties/instance/properties/direction",
-									"title": "The direction Schema",
-									"description": "The direction of the pressure force.",
-									"type": [
-										"string",
-										"null"
+								"else": {
+									"required": [
+										"nodes"
+									]
+								}
+							},
+							{
+								"if": {
+									"properties": {
+										"type": {
+											"const": "column_wind_load"
+										}
+									}
+								},
+								"then": {
+									"required": [
+										"elevations"
 									],
-									"if": {
-										"type": "string"
-									},
-									"then": {
-										"enum": [
-											"X",
-											"X_projected",
-											"Y",
-											"Y_projected",
-											"Z",
-											"Z_projected",
-											"local"
-										]
+									"properties": {
+										"mags": {
+											"$id": "#/properties/area_loads/properties/instance/properties/mags",
+											"title": "The mags Schema",
+											"description": "Comma-seperated list of magnitudes matching the number of elevations in the load.",
+											"type": [
+												"string",
+												"number",
+												"array"
+											],
+											"if": {
+												"type": "string"
+											},
+											"then": {
+												"pattern": "^-?(\\d+(\\.\\d+)?|\\.\\d+)(,-?(\\d+(\\.\\d+)?|\\.\\d+))*$",
+												"errorMessage": {
+													"pattern": "should be number or a comma-seperated list of numbers eg. '1.2' or '0.2,0.5'"
+												}
+											},
+											"items": {
+												"type": "number"
+											}
+										}
+									}
+								}
+							},
+							{
+								"if": {
+									"properties": {
+										"type": {
+											"const": "general_one_way"
+										}
+									}
+								},
+								"then": {
+									"properties": {
+										"mags": {
+											"$id": "#/properties/area_loads/properties/instance/properties/mags_general_one_way",
+											"title": "The mags Schema",
+											"description": "Comma-seperated list of magnitudes matching the number of elevations in the load.",
+											"type": [
+												"string",
+												"number",
+												"array"
+											],
+											"if": {
+												"type": "string"
+											},
+											"then": {
+												"pattern": "^-?(\\d+(\\.\\d+)?|\\.\\d+)(,-?(\\d+(\\.\\d+)?|\\.\\d+))*$",
+												"errorMessage": {
+													"pattern": "should be number or a comma-seperated list of numbers eg. '1.2' or '0.2,0.5'"
+												}
+											},
+											"items": {
+												"type": "number"
+											}
+										}
+									}
+								}
+							},
+							{
+								"if": {
+									"properties": {
+										"type": {
+											"const": "two_way"
+										}
+									}
+								},
+								"then": {
+									"properties": {
+										"elevation_direction": {
+											"$id": "#/properties/area_loads/properties/instance/properties/elevation_direction",
+											"title": "The elevation_direction Schema",
+											"description": "two_way only. The direction used to interpret elevations for this area load.",
+											"type": [
+												"string",
+												"null"
+											]
+										},
+										"plate_material_id": {
+											"$id": "#/properties/area_loads/properties/instance/properties/plate_material_id",
+											"title": "The plate_material_id Schema",
+											"description": "two_way only. Material ID assigned to plates auto-generated from this area load.",
+											"type": [
+												"integer",
+												"string",
+												"null"
+											]
+										},
+										"plate_thickness": {
+											"$id": "#/properties/area_loads/properties/instance/properties/plate_thickness",
+											"title": "The plate_thickness Schema",
+											"description": "two_way only. Thickness assigned to plates auto-generated from this area load.",
+											"type": [
+												"number",
+												"string",
+												"null"
+											]
+										},
+										"plate_torsion": {
+											"$id": "#/properties/area_loads/properties/instance/properties/plate_torsion",
+											"title": "The plate_torsion Schema",
+											"description": "two_way only. Whether torsion is considered for plates auto-generated from this area load.",
+											"type": [
+												"string",
+												"null"
+											],
+											"enum": [
+												"yes",
+												"no",
+												null
+											]
+										},
+										"plate_rotation": {
+											"$id": "#/properties/area_loads/properties/instance/properties/plate_rotation",
+											"title": "The plate_rotation Schema",
+											"description": "two_way only. Rotation (about local Z) assigned to plates auto-generated from this area load.",
+											"type": [
+												"number",
+												"string",
+												"null"
+											]
+										},
+										"number_of_segments": {
+											"$id": "#/properties/area_loads/properties/instance/properties/number_of_segments",
+											"title": "The number_of_segments Schema",
+											"description": "two_way only. Number of segments used to discretize plates auto-generated from this area load.",
+											"type": [
+												"integer",
+												"string",
+												"null"
+											]
+										}
 									}
 								}
 							}
-						},
+						],
 						"properties": {
 							"type": {
 								"$id": "#/properties/area_loads/properties/instance/properties/type",
@@ -2088,8 +2849,41 @@ skyciv.validator = function () {
 									"column_wind_load",
 									"open_structure",
 									"non_rectangular",
-									"general_one_way"
+									"general_one_way",
+									"general_two_way"
 								]
+							},
+							"mag": {
+								"$id": "#/properties/area_loads/properties/instance/properties/mag",
+								"title": "The mag Schema",
+								"description": "The pressure magnitude.",
+								"type": [
+									"number",
+									"null"
+								]
+							},
+							"direction": {
+								"$id": "#/properties/area_loads/properties/instance/properties/direction",
+								"title": "The direction Schema",
+								"description": "The direction of the pressure force.",
+								"type": [
+									"string",
+									"null"
+								],
+								"if": {
+									"type": "string"
+								},
+								"then": {
+									"enum": [
+										"X",
+										"X_projected",
+										"Y",
+										"Y_projected",
+										"Z",
+										"Z_projected",
+										"local"
+									]
+								}
 							},
 							"nodes": {
 								"$id": "#/properties/area_loads/properties/instance/properties/nodes",
@@ -2228,76 +3022,44 @@ skyciv.validator = function () {
 							"members": {
 								"$id": "#/properties/area_loads/properties/instance/properties/members",
 								"title": "The members Schema",
-								"description": "Member count/reference associated with the generated two-way plate load distribution.",
+								"description": "non_rectangular only. Comma-separated list of member IDs forming the closed loop that bounds the area load.",
 								"type": [
 									"integer",
 									"number",
 									"string",
+									"array",
 									"null"
 								]
 							},
-							"elevation_direction": {
-								"$id": "#/properties/area_loads/properties/instance/properties/elevation_direction",
-								"title": "The elevation_direction Schema",
-								"description": "The direction used to interpret elevations for this area load.",
-								"type": [
-									"string",
-									"null"
-								]
+							"area": {
+								"$id": "#/properties/area_loads/properties/instance/properties/area",
+								"title": "The area Schema",
+								"description": "The loaded area. Calculated by S3D.",
+								"type": "number"
 							},
-							"plate_material_id": {
-								"$id": "#/properties/area_loads/properties/instance/properties/plate_material_id",
-								"title": "The plate_material_id Schema",
-								"description": "Material ID assigned to plates auto-generated from this area load.",
-								"type": [
-									"integer",
-									"string",
-									"null"
-								]
+							"centroid": {
+								"$id": "#/properties/area_loads/properties/instance/properties/centroid",
+								"title": "The centroid Schema",
+								"description": "The centroid of the loaded area [X, Y, Z]. Calculated by S3D.",
+								"type": "array",
+								"items": {
+									"type": "number"
+								}
 							},
-							"plate_thickness": {
-								"$id": "#/properties/area_loads/properties/instance/properties/plate_thickness",
-								"title": "The plate_thickness Schema",
-								"description": "Thickness assigned to plates auto-generated from this area load.",
-								"type": [
-									"number",
-									"string",
-									"null"
-								]
+							"sub_polygons": {
+								"$id": "#/properties/area_loads/properties/instance/properties/sub_polygons",
+								"title": "The sub_polygons Schema",
+								"description": "The polygons the area load is divided into and the load on each. Calculated by S3D.",
+								"type": "array",
+								"items": {
+									"type": "object"
+								}
 							},
-							"plate_torsion": {
-								"$id": "#/properties/area_loads/properties/instance/properties/plate_torsion",
-								"title": "The plate_torsion Schema",
-								"description": "Whether torsion is considered for plates auto-generated from this area load.",
-								"type": [
-									"string",
-									"null"
-								],
-								"enum": [
-									"yes",
-									"no",
-									null
-								]
-							},
-							"plate_rotation": {
-								"$id": "#/properties/area_loads/properties/instance/properties/plate_rotation",
-								"title": "The plate_rotation Schema",
-								"description": "Rotation (about local Z) assigned to plates auto-generated from this area load.",
-								"type": [
-									"number",
-									"string",
-									"null"
-								]
-							},
-							"number_of_segments": {
-								"$id": "#/properties/area_loads/properties/instance/properties/number_of_segments",
-								"title": "The number_of_segments Schema",
-								"description": "Number of segments used to discretize plates auto-generated from this area load.",
-								"type": [
-									"integer",
-									"string",
-									"null"
-								]
+							"generated_from": {
+								"$id": "#/properties/area_loads/properties/instance/properties/generated_from",
+								"title": "The generated_from Schema",
+								"description": "The module that generated this area load, eg. \"wind_module\".",
+								"type": "string"
 							}
 						},
 						"patternProperties": {
@@ -3047,6 +3809,158 @@ skyciv.validator = function () {
 						}
 					}
 				}
+			},
+			"load_cases": {
+				"$id": "#/properties/load_cases",
+				"title": "The load_cases Schema",
+				"description": "Maps load groups to standard load type categories for a design code, used to auto-generate code-based load combinations. The top-level key is the design code identifier (eg. \"ASCE-7-2022-LRFD\", \"AS-1170.0-2002\", \"EN-1990-2002\", or the older short codes \"AISC\", \"ASCE\", \"AS\", \"EN\", \"NBCC\"). Each nested key is a load group name from the model and its value is the code-defined load type.",
+				"type": "object",
+				"additionalProperties": {
+					"type": "object",
+					"additionalProperties": {
+						"type": "string"
+					}
+				},
+				"examples": [
+					{
+						"ASCE-7-2022-LRFD": {
+							"D1": "D",
+							"SW1": "D",
+							"L1": "L",
+							"S1": "S",
+							"W1": "W"
+						}
+					}
+				]
+			},
+			"groups": {
+				"$id": "#/properties/groups",
+				"title": "The groups Schema",
+				"description": "Groups of similar elements (members, plates, supports etc.) used to organise the structure. Each group is keyed by its ID. S3D may also export groups as an array indexed by ID, where unused indexes are null.",
+				"type": [
+					"object",
+					"array"
+				],
+				"patternProperties": {
+					"^(.+)$": {
+						"$id": "#/properties/groups/properties/instance",
+						"title": "The Groups Instance Schema",
+						"type": [
+							"object",
+							"null"
+						],
+						"properties": {
+							"name": {
+								"$id": "#/properties/groups/properties/instance/properties/name",
+								"title": "The name Schema",
+								"description": "The name of the group.",
+								"type": "string"
+							},
+							"ids": {
+								"$id": "#/properties/groups/properties/instance/properties/ids",
+								"title": "The ids Schema",
+								"description": "The IDs of the elements in this group.",
+								"type": "array",
+								"items": {
+									"type": [
+										"integer",
+										"string"
+									]
+								}
+							},
+							"type": {
+								"$id": "#/properties/groups/properties/instance/properties/type",
+								"title": "The type Schema",
+								"description": "What the group is comprised of, eg. \"elements\", \"nodes\", \"supports\", \"plates\" or \"groups\".",
+								"type": "string",
+								"examples": [
+									"elements",
+									"nodes",
+									"supports",
+									"plates",
+									"groups"
+								]
+							}
+						}
+					}
+				},
+				"items": {
+					"$id": "#/properties/groups/items",
+					"title": "The Groups Instance Schema",
+					"type": [
+						"object",
+						"null"
+					],
+					"properties": {
+						"name": {
+							"$id": "#/properties/groups/items/properties/name",
+							"title": "The name Schema",
+							"description": "The name of the group.",
+							"type": "string"
+						},
+						"ids": {
+							"$id": "#/properties/groups/items/properties/ids",
+							"title": "The ids Schema",
+							"description": "The IDs of the elements in this group.",
+							"type": "array",
+							"items": {
+								"type": [
+									"integer",
+									"string"
+								]
+							}
+						},
+						"type": {
+							"$id": "#/properties/groups/items/properties/type",
+							"title": "The type Schema",
+							"description": "What the group is comprised of, eg. \"elements\", \"nodes\", \"supports\", \"plates\" or \"groups\".",
+							"type": "string",
+							"examples": [
+								"elements",
+								"nodes",
+								"supports",
+								"plates",
+								"groups"
+							]
+						}
+					}
+				}
+			},
+			"dataVersion": {
+				"$id": "#/properties/dataVersion",
+				"title": "The dataVersion Schema",
+				"description": "The version of the S3D model data format. Set by S3D when a model is exported.",
+				"type": "integer"
+			},
+			"design_input": {
+				"$id": "#/properties/design_input",
+				"title": "The design_input Schema",
+				"description": "Member design input saved with the model by S3D.",
+				"type": "object"
+			},
+			"gridlines_and_elevations": {
+				"$id": "#/properties/gridlines_and_elevations",
+				"title": "The gridlines_and_elevations Schema",
+				"description": "Gridlines and elevations defined in the S3D modelling interface.",
+				"type": "array",
+				"items": {
+					"type": "object"
+				}
+			},
+			"notional_loads": {
+				"$id": "#/properties/notional_loads",
+				"title": "The notional_loads Schema",
+				"description": "Notional load settings saved with the model by S3D.",
+				"type": "object"
+			},
+			"permanent_load_groups": {
+				"$id": "#/properties/permanent_load_groups",
+				"title": "The permanent_load_groups Schema",
+				"description": "The names of load groups that are treated as permanent loads.",
+				"type": "array",
+				"items": {
+					"type": "string"
+				}
 			}
 		}
 	}
@@ -3077,369 +3991,16 @@ skyciv.validator = function () {
 
 	var structuralChecks = {
 		"sections": function (model_data) {
-			var info_schema = {
-				"$id": "#/properties/sections/properties/instance/type4",
-				"type": "object",
-				"title": "The Sections Array Schema",
-				"description": "One can call a definition from the Section Database, instead of defining a Section explicitly",
-				"required": [
-					"info"
-				],
-				"properties": {
-					"info": {
-						"properties": {
-							"selection": {
-								"properties": {
-									"family_code": {
-										"type": [
-											"string",
-										],
-										"pattern": "^(.)+$"
-									},
-									"family_name": {
-										"type": [
-											"string",
-										],
-										"pattern": "^(.)+$"
-									},
-									"section_name": {
-										"type": [
-											"string",
-										],
-										"pattern": "^(.)+$"
-									},
-									"name": {
-										"type": [
-											"string",
-										],
-										"pattern": "^(.)+$"
-									}
-								}
-							},
-							"shape": {
-								"type": [
-									"string"
-								],
-								"pattern": "^(.)+$"
-							}
-						}
-					},
-					"user_data": {}
-				}
+			// Section specifications are defined in the model schema's "definitions". Each is checked separately
+			// (rather than via the schema's anyOf) so that errors can be reported per specification.
+			if (!ajv.getSchema("v3_schema")) {
+				ajv.addSchema(model_schema, "v3_schema");
 			}
-
-			var section_builder_schema = {
-				"$id": "#/properties/sections/properties/instance/type1",
-				"title": "The Sections Database Schema",
-				"description": "Schema for a section whose properties are explicitly defined.",
-				"type": "object",
-				"required": [
-					"area",
-					"Iz",
-					"Iy",
-					"J",
-					"material_id"
-				],
-				"properties": {
-					"version": {
-						"$id": "#/properties/sections/properties/instance/type1/properties/version",
-						"title": "The version Schema",
-						"description": "The version of the 'Section Builder' that was used to construct this object.",
-						"type": [
-							"integer",
-							"string"
-						],
-						"examples": [
-							1
-						],
-						"minimum": 1,
-						"pattern": "^[0-9]+$",
-						"errorMessage": {
-							"pattern": "should be a positive integer."
-						}
-					},
-					"name": {
-						"$id": "#/properties/sections/properties/instance/properties/type1/name",
-						"title": "The name Schema",
-						"description": "The name of your section. If nothing is entered, the name will default to the (rounded) height x width dimension.",
-						"type": "string",
-						"default": "",
-						"examples": [
-							"203 x 203"
-						],
-						"pattern": "^(.*)$"
-					},
-					"area": {
-						"$id": "#/properties/sections/properties/instance/properties/type1/area",
-						"title": "The area Schema",
-						"description": "Cross sectional area.",
-						"type": "number",
-						"exclusiveMinimum": 0
-					},
-					"Iy": {
-						"$id": "#/properties/sections/properties/instance/properties/type1/Iy",
-						"title": "The Iy Schema",
-						"description": "Area moment of inertia about the y axis.",
-						"type": "number",
-						"exclusiveMinimum": 0
-					},
-					"Iz": {
-						"$id": "#/properties/sections/properties/instance/properties/type1/Iz",
-						"title": "The Iz Schema",
-						"description": "Area moment of inertia about the z axis.",
-						"type": "number",
-						"exclusiveMinimum": 0
-					},
-					"J": {
-						"$id": "#/properties/sections/properties/instance/properties/type1/J",
-						"title": "The J Schema",
-						"description": "Torsion constant.",
-						"type": "number",
-						"exclusiveMinimum": 0
-					},
-					"material_id": {
-						"$id": "#/properties/sections/properties/instance/properties/type1/material_id",
-						"title": "The material_id Schema",
-						"description": "The ID of the material that is assigned to the cross section. Materials are defined in its own object.",
-						"type": "integer",
-						"minimum": 1
-					},
-					"shear_area_z": {
-						"$id": "#/properties/sections/properties/instance/properties/type1/shear_area_z",
-						"title": "The shear_area_z Schema",
-						"description": "Optional. Do not get confused between this property and the one with the same name within the 'aux' property. Shear Area in the Z-axis. Leave this value as Empty or Zero for a Euler-Bernoulli Beam (Recommended). Enter a value for a Timoshenko Beam (i.e. where shear deformation is not neglible).",
-						"type": [
-							"number",
-							"null",
-							"string"
-						],
-						"pattern": "^([0-9]*\\.?[0-9]*)$",
-						"examples": [
-							500,
-							null
-						]
-					},
-					"shear_area_y": {
-						"$id": "#/properties/sections/properties/instance/properties/type1/shear_area_y",
-						"title": "The shear_area_y Schema",
-						"description": "Optional. Do not get confused between this property and the one with the same name within the 'aux' property. Shear Area in the Y-axis. Leave this value as Empty or Zero for a Euler-Bernoulli Beam (Recommended). Enter a value for a Timoshenko Beam (i.e. where shear deformation is not neglible).",
-						"type": [
-							"number",
-							"null",
-							"string"
-						],
-						"pattern": "^([0-9]*\\.?[0-9]*)$",
-						"examples": [
-							800,
-							null
-						]
-					},
-					"revit": {
-						"type": [
-							"string",
-							"null"
-						]
-					},
-					"aux": {
-						"$id": "#/properties/sections/properties/instance/type1/properties/aux",
-						"title": "The aux Schema",
-						"description": "The 'aux' property is an object containing various property values. It contains the geometric coordinates of the cross section among other properties which are calculated via the 'Section Builder' software. For brevity, the individual properties are not detailed here. To understand how to create a section via the 'Section Builder' and implement it into the API, please contact us at info@skyciv.com",
-						"type": "object",
-						"required": [
-							"composite",
-							"Qz",
-							"Qy",
-							"centroid_point",
-							"centroid_length",
-							"depth",
-							"width",
-							"alpha",
-							"shear_area_z",
-							"shear_area_y",
-							"torsion_radius"
-						],
-						"properties": {
-							"composite": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/composite",
-								"title": "The composite Schema",
-								"type": "boolean",
-								"default": false
-							},
-							"Qz": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/Qz",
-								"title": "The Qz Schema",
-								"default": 0,
-								"type": "number"
-							},
-							"Qy": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/Qy",
-								"title": "The Qy Schema",
-								"default": 0,
-								"type": "number"
-							},
-							"centroid_point": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/centroid_point",
-								"title": "The centroid_point Schema",
-								"type": "array",
-								"minItems": 2,
-								"maxItems": 2,
-								"items": {
-									"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/centroid_point/items",
-									"type": "number",
-									"title": "The Items Schema",
-									"default": 0,
-									"examples": [
-										101.6,
-										101.6
-									]
-								}
-							},
-							"centroid_length": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/centroid_length",
-								"title": "The centroid_length Schema",
-								"type": "array",
-								"minItems": 2,
-								"maxItems": 2,
-								"items": {
-									"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/centroid_length/items",
-									"type": "number",
-									"title": "The Items Schema",
-									"default": 0,
-									"examples": [
-										101.6,
-										101.6
-									]
-								}
-							},
-							"depth": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/depth",
-								"title": "The depth Schema",
-								"default": 0,
-								"type": "number"
-							},
-							"width": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/width",
-								"title": "The width Schema",
-								"default": 0,
-								"type": "number"
-							},
-							"alpha": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/alpha",
-								"title": "The alpha Schema",
-								"default": 0,
-								"type": "number"
-							},
-							"Zy": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/Zy",
-								"title": "The Zy Schema",
-								"type": "number"
-							},
-							"Zz": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/Zz",
-								"title": "The Zz Schema",
-								"type": "number"
-							},
-							"warping_constant": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/warping_constant",
-								"title": "The warping_constant Schema",
-								"type": "number"
-							},
-							"shear_area_z": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/shear_area_z",
-								"title": "The shear_area_z Schema",
-								"default": 0,
-								"type": "number"
-							},
-							"shear_area_y": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/shear_area_y",
-								"title": "The shear_area_y Schema",
-								"default": 0,
-								"type": "number"
-							},
-							"torsion_radius": {
-								"$id": "#/properties/sections/properties/instance/type1/properties/aux/properties/torsion_radius",
-								"title": "The torsion_radius Schema",
-								"default": 0,
-								"type": "number"
-							}
-						}
-					},
-					"user_data": {}
-				}
-			}
-
-			var load_section_schema = {
-				"$id": "#/properties/sections/properties/instance/type2",
-				"type": "object",
-				"title": "The Sections Array Schema",
-				"description": "One can call a definition from the Section Database, instead of defining a Section explicitly",
-				"required": [
-					"load_section",
-					"material_id"
-				],
-				"properties": {
-					"load_section": {
-						"$id": "#/properties/sections/properties/instance/type2/load_section",
-						"type": [
-							"array",
-							"string"
-						],
-						"title": "The Load Section Schema",
-						"$comment": "Array is a list of strings eg. ['American', 'AISC', 'W shapes', 'W14x808']",
-						"items": {
-							"type": "string"
-						},
-						"minItems": 4,
-						"maxItems": 4,
-					},
-					"material_id": {
-						"$id": "#/properties/sections/properties/instance/type2/material_id",
-						"title": "The Material ID Schema",
-						"description": "The material attached to this particle section.",
-						"type": "integer",
-						"minimum": 1
-					},
-					"user_data": {}
-				}
-			}
-
-			var load_custom_schema = {
-				"$id": "#/properties/sections/properties/instance/type3",
-				"type": "object",
-				"title": "The Sections Array Schema",
-				"description": "One can call a definition from the Section Database, instead of defining a Section explicitly",
-				"required": [
-					"load_custom",
-					"material_id"
-				],
-				"properties": {
-					"load_section": {
-						"$id": "#/properties/sections/properties/instance/type2/load_custom",
-						"type": [
-							"string"
-						],
-						"title": "The Load Section Schema",
-						"$comment": "The name of your custom section, as saved in the Section Builder",
-						"items": {
-							"type": "string"
-						}
-					},
-					"material_id": {
-						"$id": "#/properties/sections/properties/instance/type2/material_id",
-						"title": "The Material ID Schema",
-						"description": "The material attached to this particle section.",
-						"type": "integer",
-						"minimum": 1
-					},
-					"user_data": {}
-				}
-			}
-
 			var sections = model_data.sections;
-			var validate_a = ajv.compile(info_schema);
-			var validate_b = ajv.compile(section_builder_schema);
-			var validate_c = ajv.compile(load_section_schema);
-			var validate_d = ajv.compile(load_custom_schema);
+			var validate_a = ajv.getSchema("v3_schema#/definitions/section_info");
+			var validate_b = ajv.getSchema("v3_schema#/definitions/section_builder");
+			var validate_c = ajv.getSchema("v3_schema#/definitions/section_load_section");
+			var validate_d = ajv.getSchema("v3_schema#/definitions/section_load_custom");
 			var errors = [];
 
 			for (const s in sections) {
@@ -3688,6 +4249,100 @@ skyciv.validator = function () {
 
 			return instances;
 		}
+	}
+
+	function checkElementsExists(s3d_model) { //api format
+		var err_list = [];
+		//check PLs
+		for (var n in s3d_model.point_loads) {
+			var this_elem = s3d_model.point_loads[n];
+			if (this_elem.type == "N" || this_elem.type == "n") {
+				var node_id = this_elem.node;
+				if (!s3d_model.nodes[node_id]) {
+					err_list.push("Point load " + n + " is pointing to a node (#" + node_id + ") that does not exist.")
+				}
+			} else if (this_elem.type == "M" || this_elem.type == "m") {
+				var mem_id = this_elem.member;
+				if (!s3d_model.members[mem_id]) {
+					err_list.push("Point load " + n + " is pointing to a member (#" + mem_id + ") that does not exist.")
+				}
+			}
+		}
+
+		//check moments
+		for (var n in s3d_model.moments) {
+			var this_elem = s3d_model.moments[n];
+			if (this_elem.type == "N" || this_elem.type == "n") {
+				var node_id = this_elem.node;
+				if (!s3d_model.nodes[node_id]) {
+					err_list.push("Moment " + n + " is pointing to a node (#" + node_id + ") that does not exist.")
+				}
+			} else if (this_elem.type == "M" || this_elem.type == "m") {
+				var mem_id = this_elem.member;
+				if (!s3d_model.members[mem_id]) {
+					err_list.push("Moment " + n + " is pointing to a member (#" + mem_id + ") that does not exist.")
+				}
+			}
+		}
+
+		//check DLS
+		for (var n in s3d_model.distributed_loads) {
+			var this_elem = s3d_model.distributed_loads[n];
+			var mem_id = this_elem.member;
+			if (!s3d_model.members[mem_id]) {
+				err_list.push("Distributed Load " + n + " is pointing to a member (#" + mem_id + ") that does not exist.")
+			}
+		}
+
+		//check plates
+		for (var n in s3d_model.plates) {
+			var this_elem = s3d_model.plates[n];
+			var plate_nodes = this_elem.nodes;
+			if (typeof plate_nodes == "string") plate_nodes = plate_nodes.split(",");
+			if (plate_nodes.length < 3) err_list.push("Plate " + n + " has insufficient nodes. Should have at least 3 nodes to define a plate.");
+			for (var i = 0; i < plate_nodes.length; i++) {
+				var node_id = plate_nodes[i];
+				if (!node_id) continue;
+				if (!s3d_model.nodes[node_id]) {
+					err_list.push("Plate " + n + " is pointing to a node (#" + node_id + ") that does not exist. Please remove this node from the plate.")
+				}
+			}
+
+		}
+
+		//check area loads
+		for (var n in s3d_model.area_loads) {
+			var this_elem = s3d_model.area_loads[n];
+			var plate_nodes = this_elem.nodes;
+
+			if (this_elem.type == "non_rectangular") {
+				var member_elems = this_elem.members;
+				if (typeof member_elems == "string") member_elems = member_elems.split(",");
+				if (member_elems.length < 3) err_list.push("Area Load " + n + " has insufficient members. Should have at least 3 members to define a Non-Rectangular area load.");
+				for (var i = 0; i < member_elems.length; i++) {
+					var mem_id = member_elems[i];
+					if (!mem_id) continue;
+					if (!s3d_model.members[mem_id]) {
+						err_list.push("Area Load " + n + " is pointing to a member (#" + mem_id + ") that does not exist. Please remove this member from the area load.")
+					}
+				}
+			} else {
+				if (typeof plate_nodes == "string") plate_nodes = plate_nodes.split(",");
+				if (plate_nodes.length < 3) err_list.push("Area Load " + n + " has insufficient nodes. Should have at least 3 nodes to define an area load.");
+				for (var i = 0; i < plate_nodes.length; i++) {
+					var node_id = plate_nodes[i];
+					if (!node_id) continue;
+					if (!s3d_model.nodes[node_id]) {
+						err_list.push("Area Load " + n + " is pointing to a node (#" + node_id + ") that does not exist. Please remove this node from the area load.")
+					}
+				}
+			}
+
+
+
+		}
+
+		return err_list;
 	}
 
 	function validateModel(model_data, log_flag) {
